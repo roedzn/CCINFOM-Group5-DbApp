@@ -1,12 +1,12 @@
 # CCINFOM-Group5-DbApp
 
-🔗 [Database Project Proposal](https://docs.google.com/document/d/1-jrOARWG2kotG-TS0ANylUJbeU9Pu4Oy/edit)
-🔗 [Schema Scratch Sheet](https://docs.google.com/spreadsheets/d/1hMwmDPGuGJo0CpJH_TSuASftIagkDVdCUQSiE0-XhAQ/edit?gid=0#gid=0)
+🔗 [Database Project Proposal](https://docs.google.com/document/d/1-jrOARWG2kotG-TS0ANylUJbeU9Pu4Oy/edit)__
+🔗 [Schema Scratch Sheet](https://docs.google.com/spreadsheets/d/1hMwmDPGuGJo0CpJH_TSuASftIagkDVdCUQSiE0-XhAQ/edit?gid=0#gid=0)__
 
 
 ## 📍 TODO
 - [ ] Create EERD design (using lucidchart for convenience)
-    - [ ] Draft design (current task: roe working on this help out by putting your entities/tables)
+    - [ ] Draft design (current task: roe working on this help out by putting your entities/tables)__
         🔗 [Lucidchart EERD](https://lucid.app/lucidchart/fd84e567-7d5e-4e4f-ac70-80523924ceb4/edit?viewport_loc=-326%2C-210%2C2096%2C1127%2C0_0&invitationId=inv_b714da36-9bd6-4d95-911b-d0ffe0834c44)
     - [ ] Use Tangkeko's shitty crow foot DB design
     - [ ] Add relation table
