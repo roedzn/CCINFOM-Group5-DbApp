@@ -4,7 +4,7 @@
 - Google Sheets Draft Schema: [https://docs.google.com/spreadsheets/d/1hMwmDPGuGJo0CpJH_TSuASftIagkDVdCUQSiE0-XhAQ/edit?gid=0#gid=0](url)
 
 ## TODO
-- [ ] Create EERD design (using draw.io for convenience)
+- [ ] Create EERD design (using lucidchart for convenience)
     - [ ] Draft design
         - [ ] Normalize when needed (ensure 3NF, vv strict sila sa design)
     - [ ] Add Tangkeko's shitty crow foot DB design
