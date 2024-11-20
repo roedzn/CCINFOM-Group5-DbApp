@@ -5,6 +5,8 @@
 
 ## TODO
 - [ ] Create EERD design (using draw.io for convenience)
+    - [ ] Draft design
+        - [ ] Normalize when needed (ensure 3NF, vv strict sila sa design)
     - [ ] Add Tangkeko's shitty crow foot DB design
     - [ ] Add relation table
 - [ ] Create SQL Queries
