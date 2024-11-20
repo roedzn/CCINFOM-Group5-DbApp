@@ -6,7 +6,7 @@
 ## TODO
 - [ ] Create EERD design (using lucidchart for convenience)
     - [ ] Draft design (current task: roe working on this help out by putting your entities/tables)
-        - Lucidchart link: [https://lucid.app/lucidchart/fd84e567-7d5e-4e4f-ac70-80523924ceb4/edit?viewport_loc=256%2C-64%2C561%2C756%2C0_0&invitationId=inv_b714da36-9bd6-4d95-911b-d0ffe0834c44](url)
+        - Lucidchart link: [https://lucid.app/lucidchart/fd84e567-7d5e-4e4f-ac70-80523924ceb4/edit?viewport_loc=-326%2C-210%2C2096%2C1127%2C0_0&invitationId=inv_b714da36-9bd6-4d95-911b-d0ffe0834c44](url)
         - [ ] Normalize when needed (ensure 3NF, vv strict sila sa design)
     - [ ] Use Tangkeko's shitty crow foot DB design
     - [ ] Add relation table
