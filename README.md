@@ -6,14 +6,14 @@
 
 ## 📍 TODO
 - [x] Create EERD design (using lucidchart for convenience)
-    - [x] Draft design (current task: roe working on this help out by putting your entities/tables)  
+    - [x] Draft design
         🔗 [Lucidchart EERD](https://lucid.app/lucidchart/fd84e567-7d5e-4e4f-ac70-80523924ceb4/edit?viewport_loc=-326%2C-210%2C2096%2C1127%2C0_0&invitationId=inv_b714da36-9bd6-4d95-911b-d0ffe0834c44)
     - [x] Use UML design with crow foot
-    - [ ] Add relation table
+    - [x] Add relation table
 - [ ] Create SQL Queries
-    - [ ] Make tables in line with proposal, schema, and EERD
+    - [x] Make tables in line with proposal, schema, and EERD
     - [ ] Make sample queries for testing
-    - [ ] Ensure normalization for tables (recheck EERD and schema)
+    - [x] Ensure normalization for tables (recheck EERD and schema)
     - [ ] Create queries for transactions and reports
       Transactions
         - [ ] Query: Booking an appointment
