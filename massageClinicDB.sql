@@ -112,12 +112,11 @@ CREATE TABLE Timeslot (
 
 -- Table: Appointment
 CREATE TABLE Appointment (
-    AppointmentID INT AUTO_INCREMENT,
+    AppointmentID INT AUTO_INCREMENT PRIMARY KEY,
     ClientID INT NOT NULL,
     ServiceID INT NOT NULL,
     TimeslotID INT NOT NULL,
     Status ENUM('Pending', 'Booked') DEFAULT 'Pending' NOT NULL,
-    PRIMARY KEY (AppointmentID, TimeslotID), 
     FOREIGN KEY (ClientID) REFERENCES Client(ClientID)
         ON DELETE CASCADE 
         ON UPDATE CASCADE,
@@ -206,27 +205,27 @@ INSERT INTO Therapist_Revenue (TherapistID, TherapistRevenue) VALUES
 (10, 1100.00);
 
 INSERT INTO Service_Type (Type, Description, SessionCost) VALUES
-('Relaxation', 'Soothing and relaxing massage', 0.00),  -- No additional cost, easy
-('Therapeutic', 'Treatment for pain relief', 20.00),    -- Moderate additional cost
-('Swedish', 'Light to medium pressure massage', 10.00), -- Slight additional cost
-('Deep Tissue', 'Intense muscle work for tension', 30.00), -- High intensity
-('Hot Stone', 'Relaxation using heated stones', 50.00), -- Extra resources (stones)
-('Reflexology', 'Foot massage targeting pressure points', 15.00), -- Moderate cost
-('Sports', 'Massage for athletes and recovery', 40.00), -- Specialized skill required
-('Shiatsu', 'Japanese pressure massage', 25.00),        -- Moderate difficulty
-('Prenatal', 'Massage for pregnant clients', 10.00),    -- Special attention needed
+('Relaxation', 'Soothing and relaxing massage', 0.00),  
+('Therapeutic', 'Treatment for pain relief', 20.00),  
+('Swedish', 'Light to medium pressure massage', 10.00), 
+('Deep Tissue', 'Intense muscle work for tension', 30.00),
+('Hot Stone', 'Relaxation using heated stones', 50.00), 
+('Reflexology', 'Foot massage targeting pressure points', 15.00),
+('Sports', 'Massage for athletes and recovery', 40.00),
+('Shiatsu', 'Japanese pressure massage', 25.00),       
+('Prenatal', 'Massage for pregnant clients', 10.00),    
 ('Thai', 'Stretching-based therapy', 0.00);
 
 INSERT INTO Transaction (PayingClientID, ReceivingClientID, TransactionDate, AmountPaid) VALUES
-(1, 1, '2024-01-15', 50.00 + 0.00),   -- Relaxation (TherapistID 1, $50 rate, $0 cost)
-(2, 2, '2024-02-10', 60.00 + 20.00),  -- Therapeutic (TherapistID 2, $60 rate, $20 cost)
-(3, 3, '2024-03-05', 55.00 + 10.00),  -- Swedish (TherapistID 3, $55 rate, $10 cost)
-(4, 4, '2024-04-20', 70.00 + 30.00),  -- Deep Tissue (TherapistID 4, $70 rate, $30 cost)
-(5, 5, '2024-05-25', 65.00 + 50.00),  -- Hot Stone (TherapistID 5, $65 rate, $50 cost)
-(6, 6, '2024-06-15', 75.00 + 15.00),  -- Reflexology (TherapistID 6, $75 rate, $15 cost)
-(7, 7, '2024-07-10', 80.00 + 40.00),  -- Sports (TherapistID 7, $80 rate, $40 cost)
-(8, 8, '2024-08-05', 85.00 + 25.00),  -- Shiatsu (TherapistID 8, $85 rate, $25 cost)
-(9, 9, '2024-09-15', 90.00 + 10.00),  -- Prenatal (TherapistID 9, $90 rate, $10 cost)
+(1, 1, '2024-01-15', 50.00 + 0.00),   
+(2, 2, '2024-02-10', 60.00 + 20.00),  
+(3, 3, '2024-03-05', 55.00 + 10.00),  
+(4, 4, '2024-04-20', 70.00 + 30.00),  
+(5, 5, '2024-05-25', 65.00 + 50.00),  
+(6, 6, '2024-06-15', 75.00 + 15.00),  
+(7, 7, '2024-07-10', 80.00 + 40.00),  
+(8, 8, '2024-08-05', 85.00 + 25.00),  
+(9, 9, '2024-09-15', 90.00 + 10.00),  
 (10, 10, '2024-10-20', 95.00 + 0.00);
 
 INSERT INTO Timeslot (Day, Time, Status) VALUES
@@ -255,7 +254,7 @@ INSERT INTO Service (ServiceTypeID, TransactionID, TherapistID, Duration) VALUES
 
 
 INSERT INTO Appointment (ClientID, ServiceID, TimeslotID, Status) VALUES
-(1, 1, 1, 'Booked'), -- ServiceID 1 with correct TransactionID (composite key check needed)
+(1, 1, 1, 'Booked'), 
 (2, 2, 2, 'Pending'),
 (3, 3, 3, 'Booked'),
 (4, 4, 4, 'Pending'),
