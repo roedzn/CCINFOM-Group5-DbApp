@@ -39,16 +39,6 @@ CREATE TABLE Therapist_Qualifications (
     ON UPDATE CASCADE
 );
 
--- Table: TherapistRevenue
-CREATE TABLE Therapist_Revenue (
-    RevenueID INT AUTO_INCREMENT PRIMARY KEY,
-    TherapistID INT NOT NULL,
-    TherapistRevenue DECIMAL(8, 2),
-    FOREIGN KEY (TherapistID) REFERENCES Therapists(TherapistID)
-    ON DELETE CASCADE 
-    ON UPDATE CASCADE
-);
-
 -- Table: ServiceType
 CREATE TABLE Service_Types (
     ServiceTypeID INT AUTO_INCREMENT PRIMARY KEY,
@@ -123,6 +113,20 @@ CREATE TABLE Services (
         ON UPDATE CASCADE
 );
 
+-- Table: TherapistRevenue
+CREATE TABLE Therapist_Revenue (
+    RevenueID INT AUTO_INCREMENT PRIMARY KEY,
+    TherapistID INT NOT NULL,
+    ServiceID INT NOT NULL,
+    TherapistRevenue DECIMAL(8, 2),
+    FOREIGN KEY (TherapistID) REFERENCES Therapists(TherapistID)
+		ON DELETE CASCADE 
+		ON UPDATE CASCADE,
+    FOREIGN KEY (ServiceID) REFERENCES Services(ServiceID)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
 -- Table: ClientFeedback
 CREATE TABLE Client_Feedbacks (
     ClientFeedbackID INT AUTO_INCREMENT PRIMARY KEY,
@@ -174,18 +178,6 @@ INSERT INTO Therapist_Qualifications (TherapistID, RelevantExp, YearsExp) VALUES
 (8, 'Biology Degree', 7),
 (9, 'DPT Degree', 3),
 (10, 'Licensure', 8);
-
-INSERT INTO Therapist_Revenue (TherapistID, TherapistRevenue) VALUES
-(1, 1200.00),
-(2, 1500.00),
-(3, 1800.00),
-(4, 2000.00),
-(5, 1700.00),
-(6, 1600.00),
-(7, 1900.00),
-(8, 1400.00),
-(9, 1300.00),
-(10, 1100.00);
 
 INSERT INTO Service_Types (Type, Description, SessionCost) VALUES
 ('Relaxation', 'Soothing and relaxing massage', 0.00),  
@@ -249,6 +241,19 @@ INSERT INTO Services (ServiceTypeID, TransactionID, AppointmentID, TherapistID, 
 (9, 9, 9, 9, '01:00:00'),
 (10, 10, 10, 10, '01:30:00');
 
+INSERT INTO Therapist_Revenue (TherapistID, ServiceID, TherapistRevenue) VALUES
+(1, 1, 1200.00),
+(2, 2, 1500.00),
+(3, 3, 1800.00),
+(4, 4, 2000.00),
+(5, 5, 1700.00),
+(6, 6, 1600.00),
+(7, 7, 1900.00),
+(8, 8, 1400.00),
+(9, 9, 1300.00),
+(10, 10, 1100.00);
+
+
 INSERT INTO Client_Feedbacks (ClientID, AppointmentID, ClientRating, AdditionalFeedback) VALUES
 (1, 1, 5, 'Excellent service'),
 (2, 2, 4, 'Good, but room was cold'),
@@ -261,15 +266,3 @@ INSERT INTO Client_Feedbacks (ClientID, AppointmentID, ClientRating, AdditionalF
 (9, 9, 4, 'Prenatal massage was great, but short'),
 (10, 10, 5, 'Excellent Thai massage, very refreshing');
 
-SELECT * FROM client_feedback;
-SELECT * FROM Client;
-SELECT * FROM Therapist;
-SELECT * FROM Therapist_Qualifications;
-SELECT * FROM Therapist_Availability;
-SELECT * FROM Therapist_Revenue;
-SELECT * FROM Service_Type;
-SELECT * FROM Transaction;
-SELECT * FROM Service;
-SELECT * FROM Timeslot;
-SELECT * FROM Appointment;
-SELECT * FROM Client_Feedback;
