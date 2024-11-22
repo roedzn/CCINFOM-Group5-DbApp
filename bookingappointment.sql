@@ -1,3 +1,10 @@
+--Variables to be set before running the query:
+--@ClientID: ID of the client booking the appointment.
+--@ServiceTypeID: ID of the desired service type.
+--@DesiredDay: Day of the appointment (e.g., 'Monday').
+--@DesiredTime: Time of the appointment (e.g., '10:00:00').
+--@Duration: Duration of the service (e.g., '01:00:00').
+
 -- Step 1: Find an available timeslot on the desired day and time
 SELECT TimeslotID INTO @AvailableTimeslotID
 FROM Timeslot
