@@ -7,7 +7,7 @@ CREATE DATABASE IF NOT EXISTS BookingManagementSystem;
 USE BookingManagementSystem;
 
 -- Table: Client
-CREATE TABLE Client (
+CREATE TABLE Clients (
     ClientID INT AUTO_INCREMENT PRIMARY KEY,
     FirstName VARCHAR(45) NOT NULL,
     LastName VARCHAR(45) NOT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE Client (
 );
 
 -- Table: Therapist
-CREATE TABLE Therapist (
+CREATE TABLE Therapists (
     TherapistID INT AUTO_INCREMENT PRIMARY KEY,
     LastName VARCHAR(45) NOT NULL,
     FirstName VARCHAR(45) NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE Therapist_Qualifications (
     TherapistID INT NOT NULL,
     RelevantExp VARCHAR(45),
     YearsExp TINYINT,
-    FOREIGN KEY (TherapistID) REFERENCES Therapist(TherapistID)
+    FOREIGN KEY (TherapistID) REFERENCES Therapists(TherapistID)
     ON DELETE CASCADE 
     ON UPDATE CASCADE
 );
@@ -45,7 +45,7 @@ CREATE TABLE Therapist_Availability (
     TherapistID INT NOT NULL,
     Day VARCHAR(9),
     Time TIME,
-    FOREIGN KEY (TherapistID) REFERENCES Therapist(TherapistID)
+    FOREIGN KEY (TherapistID) REFERENCES Therapists(TherapistID)
     ON DELETE CASCADE 
     ON UPDATE CASCADE
 );
@@ -55,13 +55,13 @@ CREATE TABLE Therapist_Revenue (
     RevenueID INT AUTO_INCREMENT PRIMARY KEY,
     TherapistID INT NOT NULL,
     TherapistRevenue DECIMAL(8, 2),
-    FOREIGN KEY (TherapistID) REFERENCES Therapist(TherapistID)
+    FOREIGN KEY (TherapistID) REFERENCES Therapists(TherapistID)
     ON DELETE CASCADE 
     ON UPDATE CASCADE
 );
 
 -- Table: ServiceType
-CREATE TABLE Service_Type (
+CREATE TABLE Service_Types (
     ServiceTypeID INT AUTO_INCREMENT PRIMARY KEY,
     Type VARCHAR(45) NOT NULL,
     Description VARCHAR(85) NOT NULL,
@@ -69,41 +69,41 @@ CREATE TABLE Service_Type (
 );
 
 -- Table: Transaction
-CREATE TABLE Transaction (
+CREATE TABLE Transactions (
     TransactionID INT AUTO_INCREMENT PRIMARY KEY,
     PayingClientID INT NOT NULL,
     ReceivingClientID INT NOT NULL,
     TransactionDate DATE NOT NULL,
     AmountPaid DECIMAL(10, 2) NOT NULL,
-    FOREIGN KEY (PayingClientID) REFERENCES Client(ClientID)
+    FOREIGN KEY (PayingClientID) REFERENCES Clients(ClientID)
         ON DELETE CASCADE
         ON UPDATE CASCADE,
-    FOREIGN KEY (ReceivingClientID) REFERENCES Client(ClientID)
+    FOREIGN KEY (ReceivingClientID) REFERENCES Clients(ClientID)
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
 
 -- Table: Service
-CREATE TABLE Service (
+CREATE TABLE Services (
     ServiceID INT AUTO_INCREMENT,
     ServiceTypeID INT NOT NULL,
     TransactionID INT NOT NULL,
     TherapistID INT NOT NULL,
     Duration TIME NOT NULL,
     PRIMARY KEY (ServiceID, TransactionID),
-    FOREIGN KEY (ServiceTypeID) REFERENCES Service_Type(ServiceTypeID)
+    FOREIGN KEY (ServiceTypeID) REFERENCES Service_Types(ServiceTypeID)
         ON DELETE CASCADE
         ON UPDATE CASCADE,
-    FOREIGN KEY (TransactionID) REFERENCES Transaction(TransactionID)
+    FOREIGN KEY (TransactionID) REFERENCES Transactions(TransactionID)
         ON DELETE CASCADE
         ON UPDATE CASCADE,
-    FOREIGN KEY (TherapistID) REFERENCES Therapist(TherapistID)
+    FOREIGN KEY (TherapistID) REFERENCES Therapists(TherapistID)
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
 
 -- Table: Timeslot
-CREATE TABLE Timeslot (
+CREATE TABLE Timeslots (
     TimeslotID INT AUTO_INCREMENT PRIMARY KEY,
     Day VARCHAR(20),
     Time TIME,
@@ -111,40 +111,40 @@ CREATE TABLE Timeslot (
 );
 
 -- Table: Appointment
-CREATE TABLE Appointment (
+CREATE TABLE Appointments (
     AppointmentID INT AUTO_INCREMENT PRIMARY KEY,
     ClientID INT NOT NULL,
     ServiceID INT NOT NULL,
     TimeslotID INT NOT NULL,
     Status ENUM('Pending', 'Booked') DEFAULT 'Pending' NOT NULL,
-    FOREIGN KEY (ClientID) REFERENCES Client(ClientID)
+    FOREIGN KEY (ClientID) REFERENCES Clients(ClientID)
         ON DELETE CASCADE 
         ON UPDATE CASCADE,
-    FOREIGN KEY (ServiceID) REFERENCES Service(ServiceID)
+    FOREIGN KEY (ServiceID) REFERENCES Services(ServiceID)
         ON DELETE CASCADE 
         ON UPDATE CASCADE,
-    FOREIGN KEY (TimeslotID) REFERENCES Timeslot(TimeslotID)
+    FOREIGN KEY (TimeslotID) REFERENCES Timeslots(TimeslotID)
         ON DELETE CASCADE  
         ON UPDATE CASCADE
 );
 
 -- Table: ClientFeedback
-CREATE TABLE Client_Feedback (
+CREATE TABLE Client_Feedbacks (
     ClientFeedbackID INT AUTO_INCREMENT PRIMARY KEY,
     ClientID INT NOT NULL,
     AppointmentID INT NOT NULL,
     ClientRating INT NOT NULL,
     AdditionalFeedback VARCHAR(45),
-    FOREIGN KEY (ClientID) REFERENCES Client(ClientID)
+    FOREIGN KEY (ClientID) REFERENCES Clients(ClientID)
 		ON DELETE CASCADE 
 		ON UPDATE CASCADE,
-    FOREIGN KEY (AppointmentID) REFERENCES Appointment(AppointmentID)
+    FOREIGN KEY (AppointmentID) REFERENCES Appointments(AppointmentID)
 		ON DELETE CASCADE
 		ON UPDATE CASCADE
 );
 
 -- Sample data for each table
-INSERT INTO Client (FirstName, LastName, Sex, Birthdate, Phone, Email, Address) VALUES
+INSERT INTO Clients (FirstName, LastName, Sex, Birthdate, Phone, Email, Address) VALUES
 ('John', 'Doe', 'M', '1990-05-20', '123-456-7890', 'john.doe@example.com', '123 Elm Street'),
 ('Jane', 'Smith', 'F', '1985-10-10', '987-654-3210', 'jane.smith@example.com', '456 Oak Avenue'),
 ('Emily', 'Brown', 'F', '1992-03-15', '555-123-4567', 'emily.brown@example.com', '789 Pine Lane'),
@@ -156,7 +156,7 @@ INSERT INTO Client (FirstName, LastName, Sex, Birthdate, Phone, Email, Address) 
 ('Olivia', 'Martinez', 'F', '1999-11-11', '333-444-5555', 'olivia.martinez@example.com', '789 Fir Path'),
 ('James', 'Wilson', 'M', '1994-04-14', '444-555-6666', 'james.wilson@example.com', '123 Redwood Lane');
 
-INSERT INTO Therapist (LastName, FirstName, Sex, Birthdate, SessionRate) VALUES
+INSERT INTO Therapists (LastName, FirstName, Sex, Birthdate, SessionRate) VALUES
 ('Brown', 'Emily', 'F', '1982-07-15', 50.00),
 ('Green', 'Michael', 'M', '1990-03-05', 60.00),
 ('Smith', 'Jessica', 'F', '1985-11-20', 55.00),
@@ -204,7 +204,7 @@ INSERT INTO Therapist_Revenue (TherapistID, TherapistRevenue) VALUES
 (9, 1300.00),
 (10, 1100.00);
 
-INSERT INTO Service_Type (Type, Description, SessionCost) VALUES
+INSERT INTO Service_Types (Type, Description, SessionCost) VALUES
 ('Relaxation', 'Soothing and relaxing massage', 0.00),  
 ('Therapeutic', 'Treatment for pain relief', 20.00),  
 ('Swedish', 'Light to medium pressure massage', 10.00), 
@@ -216,7 +216,7 @@ INSERT INTO Service_Type (Type, Description, SessionCost) VALUES
 ('Prenatal', 'Massage for pregnant clients', 10.00),    
 ('Thai', 'Stretching-based therapy', 0.00);
 
-INSERT INTO Transaction (PayingClientID, ReceivingClientID, TransactionDate, AmountPaid) VALUES
+INSERT INTO Transactions (PayingClientID, ReceivingClientID, TransactionDate, AmountPaid) VALUES
 (1, 1, '2024-01-15', 50.00 + 0.00),   
 (2, 2, '2024-02-10', 60.00 + 20.00),  
 (3, 3, '2024-03-05', 55.00 + 10.00),  
@@ -228,7 +228,7 @@ INSERT INTO Transaction (PayingClientID, ReceivingClientID, TransactionDate, Amo
 (9, 9, '2024-09-15', 90.00 + 10.00),  
 (10, 10, '2024-10-20', 95.00 + 0.00);
 
-INSERT INTO Timeslot (Day, Time, Status) VALUES
+INSERT INTO Timeslots (Day, Time, Status) VALUES
 ('Monday', '10:00:00', 'Available'),
 ('Tuesday', '11:00:00', 'Available'),
 ('Wednesday', '14:00:00', 'Available'),
@@ -240,7 +240,7 @@ INSERT INTO Timeslot (Day, Time, Status) VALUES
 ('Tuesday', '16:00:00', 'Available'),
 ('Wednesday', '18:00:00', 'Booked');
 
-INSERT INTO Service (ServiceTypeID, TransactionID, TherapistID, Duration) VALUES
+INSERT INTO Services (ServiceTypeID, TransactionID, TherapistID, Duration) VALUES
 (1, 1, 1, '01:00:00'),
 (2, 2, 2, '01:30:00'),
 (3, 3, 3, '01:00:00'),
@@ -253,7 +253,7 @@ INSERT INTO Service (ServiceTypeID, TransactionID, TherapistID, Duration) VALUES
 (10, 10, 10, '01:30:00');
 
 
-INSERT INTO Appointment (ClientID, ServiceID, TimeslotID, Status) VALUES
+INSERT INTO Appointments (ClientID, ServiceID, TimeslotID, Status) VALUES
 (1, 1, 1, 'Booked'), 
 (2, 2, 2, 'Pending'),
 (3, 3, 3, 'Booked'),
@@ -265,7 +265,7 @@ INSERT INTO Appointment (ClientID, ServiceID, TimeslotID, Status) VALUES
 (9, 9, 9, 'Booked'),
 (10, 10, 10, 'Pending');
 
-INSERT INTO Client_Feedback (ClientID, AppointmentID, ClientRating, AdditionalFeedback) VALUES
+INSERT INTO Client_Feedbacks (ClientID, AppointmentID, ClientRating, AdditionalFeedback) VALUES
 (1, 1, 5, 'Excellent service'),
 (2, 2, 4, 'Good, but room was cold'),
 (3, 3, 5, 'Very professional and attentive'),
