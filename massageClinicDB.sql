@@ -3,8 +3,8 @@
 -- Author: Group 5
 
 -- Create the database
-CREATE DATABASE IF NOT EXISTS BookingManagementSystem;
-USE BookingManagementSystem;
+CREATE DATABASE IF NOT EXISTS massageClinicDbms;
+USE massageClinicDbms;
 
 -- Table: Client
 CREATE TABLE Clients (
@@ -34,17 +34,6 @@ CREATE TABLE Therapist_Qualifications (
     TherapistID INT NOT NULL,
     RelevantExp VARCHAR(45),
     YearsExp TINYINT,
-    FOREIGN KEY (TherapistID) REFERENCES Therapists(TherapistID)
-    ON DELETE CASCADE 
-    ON UPDATE CASCADE
-);
-
--- Table: TherapistAvailability
-CREATE TABLE Therapist_Availability (
-    TimeslotID INT AUTO_INCREMENT PRIMARY KEY,
-    TherapistID INT NOT NULL,
-    Day VARCHAR(9),
-    Time TIME,
     FOREIGN KEY (TherapistID) REFERENCES Therapists(TherapistID)
     ON DELETE CASCADE 
     ON UPDATE CASCADE
@@ -105,9 +94,14 @@ CREATE TABLE Services (
 -- Table: Timeslot
 CREATE TABLE Timeslots (
     TimeslotID INT AUTO_INCREMENT PRIMARY KEY,
+    TherapistID INT,
     Day VARCHAR(20),
-    Time TIME,
-    Status ENUM('Available', 'Booked') DEFAULT 'Available' NOT NULL
+    StartTime TIME,
+    EndTime TIME,
+    Status ENUM('Available', 'Booked') DEFAULT 'Available' NOT NULL,
+    FOREIGN KEY (TherapistID) REFERENCES Therapists(TherapistID)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
 
 -- Table: Appointment
@@ -168,18 +162,6 @@ INSERT INTO Therapists (LastName, FirstName, Sex, Birthdate, SessionRate) VALUES
 ('Lopez', 'Maria', 'F', '1989-01-01', 90.00),
 ('Garcia', 'James', 'M', '1991-12-15', 95.00);
 
-INSERT INTO Therapist_Availability (TherapistID, Day, Time) VALUES
-(1, 'Monday', '10:00:00'),
-(2, 'Tuesday', '11:00:00'),
-(3, 'Wednesday', '14:00:00'),
-(4, 'Thursday', '09:00:00'),
-(5, 'Friday', '15:00:00'),
-(6, 'Saturday', '12:00:00'),
-(7, 'Sunday', '13:00:00'),
-(8, 'Monday', '08:00:00'),
-(9, 'Tuesday', '16:00:00'),
-(10, 'Wednesday', '18:00:00');
-
 INSERT INTO Therapist_Qualifications (TherapistID, RelevantExp, YearsExp) VALUES
 (1, 'Kinesiology Degree', 10),
 (2, 'DPT Degree', 8),
@@ -228,17 +210,18 @@ INSERT INTO Transactions (PayingClientID, ReceivingClientID, TransactionDate, Am
 (9, 9, '2024-09-15', 90.00 + 10.00),  
 (10, 10, '2024-10-20', 95.00 + 0.00);
 
-INSERT INTO Timeslots (Day, Time, Status) VALUES
-('Monday', '10:00:00', 'Available'),
-('Tuesday', '11:00:00', 'Available'),
-('Wednesday', '14:00:00', 'Available'),
-('Thursday', '09:00:00', 'Available'),
-('Friday', '15:00:00', 'Available'),
-('Saturday', '12:00:00', 'Booked'),
-('Sunday', '13:00:00', 'Available'),
-('Monday', '08:00:00', 'Booked'),
-('Tuesday', '16:00:00', 'Available'),
-('Wednesday', '18:00:00', 'Booked');
+INSERT INTO Timeslots (Day, StartTime, EndTime, Status, TherapistID) VALUES
+('Monday', '10:00:00', '11:00:00', 'Available', NULL),
+('Tuesday', '11:00:00', '12:00:00', 'Available', NULL),
+('Wednesday', '14:00:00', '15:00:00', 'Available', NULL),
+('Thursday', '09:00:00', '10:00:00', 'Available', NULL),
+('Friday', '15:00:00', '16:00:00', 'Available', NULL),
+('Saturday', '12:00:00', '14:00:00', 'Booked', 1),
+('Sunday', '13:00:00', '14:00:00', 'Available', NULL),
+('Monday', '08:00:00', '09:00:00', 'Booked', 2),
+('Tuesday', '16:00:00', '17:00:00', 'Available', NULL),
+('Wednesday', '18:00:00', '19:00:00', 'Booked', 3);
+
 
 INSERT INTO Services (ServiceTypeID, TransactionID, TherapistID, Duration) VALUES
 (1, 1, 1, '01:00:00'),
