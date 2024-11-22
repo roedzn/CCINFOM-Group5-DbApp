@@ -12,9 +12,9 @@ SELECT
 FROM 
     Timeslots
 WHERE 
-    Day = @DesiredDay 
-    AND StartTime = @DesiredStartTime
-    AND EndTime = @DesiredEndTime
+    Day = ?
+    AND StartTime = ?
+    AND EndTime = ?
     AND Status = 'Available'
 LIMIT 1;
 
@@ -27,23 +27,23 @@ IF @AvailableTimeslotID IS NOT NULL THEN
     -- Step 4: Update the timeslot status to 'Booked'
     UPDATE Timeslots
     SET Status = 'Booked'
-    WHERE TimeslotID = @AvailableTimeslotID AND TherapistID = @AvailableTherapistID;
+    WHERE TimeslotID = ? AND TherapistID = ?;
 
     -- Step 5: Insert a new appointment record
     INSERT INTO Appointments (ClientID, TimeslotID, Status)
-    VALUES (@ClientID, @AvailableTimeslotID, 'Booked');
+    VALUES (?, ?, 'Booked');
 
     SET @NewAppointmentID = LAST_INSERT_ID();
 
     -- Step 6: Insert a new transaction record
-    INSERT INTO `Transactions` (PayingClientID, ReceivingClientID, TransactionDate, AmountPaid)
-    VALUES (@ClientID, @ClientID, CURDATE(), 0.00);  -- Assuming AmountPaid is calculated elsewhere
+    INSERT INTO Transactions (PayingClientID, ReceivingClientID, TransactionDate, AmountPaid)
+    VALUES (?, ?, CURDATE(), ?);  -- Assuming AmountPaid is calculated elsewhere
 
     SET @NewTransactionID = LAST_INSERT_ID();
 
     -- Step 7: Insert a new service record
     INSERT INTO Services (ServiceTypeID, TransactionID, AppointmentID, TherapistID, Duration)
-    VALUES (@ServiceTypeID, @NewTransactionID, @NewAppointmentID, @AvailableTherapistID, @Duration);
+    VALUES (?, ?, ?, ?, ?);
 
     COMMIT;
 ELSE

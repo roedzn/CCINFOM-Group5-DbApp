@@ -51,13 +51,9 @@ CREATE TABLE Service_Types (
 CREATE TABLE Transactions (
     TransactionID INT AUTO_INCREMENT PRIMARY KEY,
     PayingClientID INT NOT NULL,
-    ReceivingClientID INT NOT NULL,
     TransactionDate DATE NOT NULL,
     AmountPaid DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (PayingClientID) REFERENCES Clients(ClientID)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
-    FOREIGN KEY (ReceivingClientID) REFERENCES Clients(ClientID)
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );
@@ -94,12 +90,16 @@ CREATE TABLE Appointments (
 CREATE TABLE Services (
     ServiceID INT AUTO_INCREMENT,
     ServiceTypeID INT NOT NULL,
+    ReceivingClientID INT NOT NULL,
     TransactionID INT NOT NULL,
     AppointmentID INT,
     TherapistID INT NOT NULL,
     Duration TIME NOT NULL,
     PRIMARY KEY (ServiceID, TransactionID),
     FOREIGN KEY (ServiceTypeID) REFERENCES Service_Types(ServiceTypeID)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+	FOREIGN KEY (ReceivingClientID) REFERENCES Clients(ClientID)
         ON DELETE CASCADE
         ON UPDATE CASCADE,
     FOREIGN KEY (TransactionID) REFERENCES Transactions(TransactionID)
@@ -191,17 +191,17 @@ INSERT INTO Service_Types (Type, Description, SessionCost) VALUES
 ('Prenatal', 'Massage for pregnant clients', 10.00),    
 ('Thai', 'Stretching-based therapy', 0.00);
 
-INSERT INTO Transactions (PayingClientID, ReceivingClientID, TransactionDate, AmountPaid) VALUES
-(1, 1, '2024-01-15', 50.00 + 0.00),   
-(2, 2, '2024-02-10', 60.00 + 20.00),  
-(3, 3, '2024-03-05', 55.00 + 10.00),  
-(4, 4, '2024-04-20', 70.00 + 30.00),  
-(5, 5, '2024-05-25', 65.00 + 50.00),  
-(6, 6, '2024-06-15', 75.00 + 15.00),  
-(7, 7, '2024-07-10', 80.00 + 40.00),  
-(8, 8, '2024-08-05', 85.00 + 25.00),  
-(9, 9, '2024-09-15', 90.00 + 10.00),  
-(10, 10, '2024-10-20', 95.00 + 0.00);
+INSERT INTO Transactions (PayingClientID, TransactionDate, AmountPaid) VALUES
+(1, '2024-01-15', 50.00 + 0.00),   
+(2, '2024-02-10', 60.00 + 20.00),  
+(3, '2024-03-05', 55.00 + 10.00),  
+(4, '2024-04-20', 70.00 + 30.00),  
+(5, '2024-05-25', 65.00 + 50.00),  
+(6, '2024-06-15', 75.00 + 15.00),  
+(7, '2024-07-10', 80.00 + 40.00),  
+(8, '2024-08-05', 85.00 + 25.00),  
+(9, '2024-09-15', 90.00 + 10.00),  
+(10, '2024-10-20', 95.00 + 0.00);
 
 INSERT INTO Timeslots (TherapistID, Day, StartTime, EndTime, Status) VALUES
 (1, 'Monday', '10:00:00', '11:00:00', 'Available'),
@@ -229,17 +229,17 @@ INSERT INTO Appointments (ClientID, TimeslotID, Status) VALUES
 (10, 10, 'Pending');
 
 
-INSERT INTO Services (ServiceTypeID, TransactionID, AppointmentID, TherapistID, Duration) VALUES
-(1, 1, 1, 1, '01:00:00'),
-(2, 2, 2, 2, '01:30:00'),
-(3, 3, 3, 3, '01:00:00'),
-(4, 4, 4, 4, '01:15:00'),
-(5, 5, 5, 5, '01:30:00'),
-(6, 6, 6, 6, '00:45:00'),
-(7, 7, 7, 7, '01:00:00'),
-(8, 8, 8, 8, '01:30:00'),
-(9, 9, 9, 9, '01:00:00'),
-(10, 10, 10, 10, '01:30:00');
+INSERT INTO Services (ServiceTypeID, ReceivingClientID, TransactionID, AppointmentID, TherapistID, Duration) VALUES
+(1, 1, 1, 1, 1, '01:00:00'),
+(2, 2, 2, 2, 2, '01:30:00'),
+(3, 3, 3, 3, 3, '01:00:00'),
+(4, 4, 4, 4, 4, '01:15:00'),
+(5, 5, 5, 5, 5, '01:30:00'),
+(6, 6, 6, 6, 6, '00:45:00'),
+(7, 7, 7, 7, 7, '01:00:00'),
+(8, 8, 8, 8, 8, '01:30:00'),
+(9, 9, 9, 9, 9, '01:00:00'),
+(10, 10, 10, 10, 10, '01:30:00');
 
 INSERT INTO Therapist_Revenue (TherapistID, ServiceID, TherapistRevenue) VALUES
 (1, 1, 1200.00),
@@ -252,7 +252,6 @@ INSERT INTO Therapist_Revenue (TherapistID, ServiceID, TherapistRevenue) VALUES
 (8, 8, 1400.00),
 (9, 9, 1300.00),
 (10, 10, 1100.00);
-
 
 INSERT INTO Client_Feedbacks (ClientID, AppointmentID, ClientRating, AdditionalFeedback) VALUES
 (1, 1, 5, 'Excellent service'),
