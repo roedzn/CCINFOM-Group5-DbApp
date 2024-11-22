@@ -8,20 +8,19 @@ import java.sql.SQLException;
 
 public class DatabaseConnectionUI {
     public static void main(String[] args) {
-        // Create the frame
+   
         JFrame frame = new JFrame("Database Connection");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 300);
         frame.setLayout(new GridLayout(5, 1, 10, 10));
 
-        // Create components
+    
         JTextField urlField = new JTextField("jdbc:mysql://localhost:3306/your_database");
         JTextField userField = new JTextField();
         JPasswordField passwordField = new JPasswordField();
         JButton connectButton = new JButton("Connect");
         JLabel statusLabel = new JLabel("Status: Not connected", SwingConstants.CENTER);
 
-        // Add placeholders and labels
         frame.add(new JLabel("Database URL:", SwingConstants.CENTER));
         frame.add(urlField);
         frame.add(new JLabel("Username:", SwingConstants.CENTER));
@@ -31,7 +30,7 @@ public class DatabaseConnectionUI {
         frame.add(connectButton);
         frame.add(statusLabel);
 
-        // Connect button action
+       
         connectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -51,7 +50,7 @@ public class DatabaseConnectionUI {
             }
         });
 
-        // Show the frame
+        
         frame.setVisible(true);
     }
 }
