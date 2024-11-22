@@ -27,9 +27,9 @@
         - [x] Query: Revenue Report
     - [ ] Forward engineer the tables using mysql workbench
 - [ ] Create Java app
-    - [ ] Create simple interface first
-    - [ ] Connect Java to MYSQL local host
-    - [ ] Test queries with executeQuery();
+    - [x] Create simple interface first
+    - [x] Connect Java to MYSQL local host
+    - [x] Test queries with executeQuery();
     - [ ] Ensure queries for transactions and reports can be done through Java
 - [ ] Enhance interface (once connected and queries work) [OPTIONAL]
     - [ ] Allow user option for transaction and report
