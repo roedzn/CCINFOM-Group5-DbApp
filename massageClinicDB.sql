@@ -3,8 +3,8 @@
 -- Author: Group 5
 
 -- Create the database
-CREATE DATABASE IF NOT EXISTS massageClinicDbms;
-USE massageClinicDbms;
+CREATE DATABASE IF NOT EXISTS massageClinicDBMS;
+USE massageClinicDBMS;
 
 -- Table: Client
 CREATE TABLE Clients (
@@ -72,33 +72,15 @@ CREATE TABLE Transactions (
         ON UPDATE CASCADE
 );
 
--- Table: Service
-CREATE TABLE Services (
-    ServiceID INT AUTO_INCREMENT,
-    ServiceTypeID INT NOT NULL,
-    TransactionID INT NOT NULL,
-    TherapistID INT NOT NULL,
-    Duration TIME NOT NULL,
-    PRIMARY KEY (ServiceID, TransactionID),
-    FOREIGN KEY (ServiceTypeID) REFERENCES Service_Types(ServiceTypeID)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
-    FOREIGN KEY (TransactionID) REFERENCES Transactions(TransactionID)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
-    FOREIGN KEY (TherapistID) REFERENCES Therapists(TherapistID)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
-);
-
 -- Table: Timeslot
 CREATE TABLE Timeslots (
-    TimeslotID INT AUTO_INCREMENT PRIMARY KEY,
-    TherapistID INT,
+    TimeslotID INT AUTO_INCREMENT,
+    TherapistID INT NOT NULL,
     Day VARCHAR(20),
     StartTime TIME,
     EndTime TIME,
     Status ENUM('Available', 'Booked') DEFAULT 'Available' NOT NULL,
+    PRIMARY KEY (TimeslotID, TherapistID),
     FOREIGN KEY (TherapistID) REFERENCES Therapists(TherapistID)
 		ON DELETE CASCADE
         ON UPDATE CASCADE
@@ -108,17 +90,36 @@ CREATE TABLE Timeslots (
 CREATE TABLE Appointments (
     AppointmentID INT AUTO_INCREMENT PRIMARY KEY,
     ClientID INT NOT NULL,
-    ServiceID INT NOT NULL,
     TimeslotID INT NOT NULL,
     Status ENUM('Pending', 'Booked') DEFAULT 'Pending' NOT NULL,
     FOREIGN KEY (ClientID) REFERENCES Clients(ClientID)
         ON DELETE CASCADE 
         ON UPDATE CASCADE,
-    FOREIGN KEY (ServiceID) REFERENCES Services(ServiceID)
-        ON DELETE CASCADE 
-        ON UPDATE CASCADE,
     FOREIGN KEY (TimeslotID) REFERENCES Timeslots(TimeslotID)
         ON DELETE CASCADE  
+        ON UPDATE CASCADE
+);
+
+-- Table: Service
+CREATE TABLE Services (
+    ServiceID INT AUTO_INCREMENT,
+    ServiceTypeID INT NOT NULL,
+    TransactionID INT NOT NULL,
+    AppointmentID INT,
+    TherapistID INT NOT NULL,
+    Duration TIME NOT NULL,
+    PRIMARY KEY (ServiceID, TransactionID),
+    FOREIGN KEY (ServiceTypeID) REFERENCES Service_Types(ServiceTypeID)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (TransactionID) REFERENCES Transactions(TransactionID)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+	FOREIGN KEY (AppointmentID) REFERENCES Appointments(AppointmentID)
+		ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    FOREIGN KEY (TherapistID) REFERENCES Therapists(TherapistID)
+        ON DELETE CASCADE
         ON UPDATE CASCADE
 );
 
@@ -210,43 +211,43 @@ INSERT INTO Transactions (PayingClientID, ReceivingClientID, TransactionDate, Am
 (9, 9, '2024-09-15', 90.00 + 10.00),  
 (10, 10, '2024-10-20', 95.00 + 0.00);
 
-INSERT INTO Timeslots (Day, StartTime, EndTime, Status, TherapistID) VALUES
-('Monday', '10:00:00', '11:00:00', 'Available', NULL),
-('Tuesday', '11:00:00', '12:00:00', 'Available', NULL),
-('Wednesday', '14:00:00', '15:00:00', 'Available', NULL),
-('Thursday', '09:00:00', '10:00:00', 'Available', NULL),
-('Friday', '15:00:00', '16:00:00', 'Available', NULL),
-('Saturday', '12:00:00', '14:00:00', 'Booked', 1),
-('Sunday', '13:00:00', '14:00:00', 'Available', NULL),
-('Monday', '08:00:00', '09:00:00', 'Booked', 2),
-('Tuesday', '16:00:00', '17:00:00', 'Available', NULL),
-('Wednesday', '18:00:00', '19:00:00', 'Booked', 3);
+INSERT INTO Timeslots (TherapistID, Day, StartTime, EndTime, Status) VALUES
+(1, 'Monday', '10:00:00', '11:00:00', 'Available'),
+(2, 'Tuesday', '11:00:00', '12:00:00', 'Available'),
+(3, 'Wednesday', '14:00:00', '15:00:00', 'Available'),
+(4, 'Thursday', '09:00:00', '10:00:00', 'Available'),
+(5, 'Friday', '15:00:00', '16:00:00', 'Available'),
+(6, 'Saturday', '12:00:00', '13:00:00', 'Booked'),
+(7, 'Sunday', '13:00:00', '14:00:00', 'Available'),
+(8, 'Monday', '08:00:00', '09:00:00', 'Booked'),
+(9, 'Tuesday', '16:00:00', '17:00:00', 'Available'),
+(10, 'Wednesday', '18:00:00', '19:00:00', 'Booked');
 
 
-INSERT INTO Services (ServiceTypeID, TransactionID, TherapistID, Duration) VALUES
-(1, 1, 1, '01:00:00'),
-(2, 2, 2, '01:30:00'),
-(3, 3, 3, '01:00:00'),
-(4, 4, 4, '01:15:00'),
-(5, 5, 5, '01:30:00'),
-(6, 6, 6, '00:45:00'),
-(7, 7, 7, '01:00:00'),
-(8, 8, 8, '01:30:00'),
-(9, 9, 9, '01:00:00'),
-(10, 10, 10, '01:30:00');
+INSERT INTO Appointments (ClientID, TimeslotID, Status) VALUES
+(1, 1, 'Booked'), 
+(2, 2, 'Pending'),
+(3, 3, 'Booked'),
+(4, 4, 'Pending'),
+(5, 5, 'Booked'),
+(6, 6, 'Pending'),
+(7, 7, 'Booked'),
+(8, 8, 'Pending'),
+(9, 9, 'Booked'),
+(10, 10, 'Pending');
 
 
-INSERT INTO Appointments (ClientID, ServiceID, TimeslotID, Status) VALUES
-(1, 1, 1, 'Booked'), 
-(2, 2, 2, 'Pending'),
-(3, 3, 3, 'Booked'),
-(4, 4, 4, 'Pending'),
-(5, 5, 5, 'Booked'),
-(6, 6, 6, 'Pending'),
-(7, 7, 7, 'Booked'),
-(8, 8, 8, 'Pending'),
-(9, 9, 9, 'Booked'),
-(10, 10, 10, 'Pending');
+INSERT INTO Services (ServiceTypeID, TransactionID, AppointmentID, TherapistID, Duration) VALUES
+(1, 1, 1, 1, '01:00:00'),
+(2, 2, 2, 2, '01:30:00'),
+(3, 3, 3, 3, '01:00:00'),
+(4, 4, 4, 4, '01:15:00'),
+(5, 5, 5, 5, '01:30:00'),
+(6, 6, 6, 6, '00:45:00'),
+(7, 7, 7, 7, '01:00:00'),
+(8, 8, 8, 8, '01:30:00'),
+(9, 9, 9, 9, '01:00:00'),
+(10, 10, 10, 10, '01:30:00');
 
 INSERT INTO Client_Feedbacks (ClientID, AppointmentID, ClientRating, AdditionalFeedback) VALUES
 (1, 1, 5, 'Excellent service'),
