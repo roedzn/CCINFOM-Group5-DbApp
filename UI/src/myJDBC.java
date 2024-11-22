@@ -26,17 +26,10 @@ public class myJDBC {
 
                     switch (uberChoice){
                         case 1:
-                            System.out.println("selected: Create mode");
-
-
-
-                            break;
-
-                        case 2:
-                            System.out.println("Selected: Read mode");
                             int choice = 0;
                             while(choice != 11){
-                                System.out.println("Choose a table to view data:");
+                                System.out.println("selected: Create mode");
+                                System.out.println("Choose a table to add data:");
                                 System.out.println("1. Client Table");
                                 System.out.println("2. Therapist Table");
                                 System.out.println("3. Therapist_Qualifications Table");
@@ -51,7 +44,75 @@ public class myJDBC {
                                 System.out.print("Enter your choice (1-11): ");
                                 choice = scanner.nextInt();
 
-                                switch (choice) {
+                                switch(choice){
+                                    case 1:
+                                        String sql = "INSERT INTO Clients (FirstName, LastName, Sex, Birthdate, Phone, Email, Address) " +
+                                                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                                        PreparedStatement pstmt = connection.prepareStatement(sql); {
+                                        scanner.nextLine();
+                                        System.out.print("Enter First Name: ");
+                                        String firstName = scanner.nextLine();
+
+                                        System.out.print("Enter Last Name: ");
+                                        String lastName = scanner.nextLine();
+
+                                        System.out.print("Enter Sex (M/F): ");
+                                        String sex = scanner.nextLine();
+
+                                        System.out.print("Enter Birthdate (yyyy-MM-dd): ");
+                                        String birthdate = scanner.nextLine();
+
+                                        System.out.print("Enter Phone: ");
+                                        String phone = scanner.nextLine();
+
+                                        System.out.print("Enter Email: ");
+                                        String email = scanner.nextLine();
+
+                                        System.out.print("Enter Address: ");
+                                        String address = scanner.nextLine();
+
+                                        // Set the values for the placeholders
+                                        pstmt.setString(1, firstName);
+                                        pstmt.setString(2, lastName);
+                                        pstmt.setString(3, sex);
+                                        pstmt.setDate(4, java.sql.Date.valueOf(birthdate));
+                                        pstmt.setString(5, phone);
+                                        pstmt.setString(6, email);
+                                        pstmt.setString(7, address);
+
+                                        // Execute the insert operation
+                                        int rowsInserted = pstmt.executeUpdate();
+
+                                        if (rowsInserted > 0) {
+                                            System.out.println("A new client record was inserted successfully!");
+                                        }
+                                    }
+                                }
+                            }
+
+
+                            break;
+
+                        case 2:
+                            System.out.println("Selected: Read mode");
+                            int choice2 = 0;
+                            while(choice2 != 11){
+                                System.out.println("Choose a table to view data:");
+                                System.out.println("1. Client Table");
+                                System.out.println("2. Therapist Table");
+                                System.out.println("3. Therapist_Qualifications Table");
+                                System.out.println("4. Therapist_Revenue Table");
+                                System.out.println("5. Service_Type Table");
+                                System.out.println("6. Transaction Table");
+                                System.out.println("7. Service Table");
+                                System.out.println("8. Timeslot Table");
+                                System.out.println("9. Appointment Table");
+                                System.out.println("10. Client Feedback Table");
+                                System.out.println("11. Exit");
+                                System.out.print("Enter your choice (1-11): ");
+                                choice2 = scanner.nextInt();
+
+                                switch (choice2) {
                                     case 1:
                                         System.out.println("Selected: Client Table");
                                         ResultSet resultSet1 = statement.executeQuery("SELECT * FROM Clients");
