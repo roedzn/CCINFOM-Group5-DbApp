@@ -4,8 +4,8 @@ SELECT
     SUM(t.AmountPaid) AS TotalRevenue
 FROM
     Appointments a
-    INNER JOIN Services s ON a.ServiceID = s.ServiceID
-    INNER JOIN `Transactions` t ON s.TransactionID = t.TransactionID
+    INNER JOIN Services s ON s.AppointmentID = a.AppointmentID
+    INNER JOIN Transactions t ON s.TransactionID = t.TransactionID
 GROUP BY
     Month
 ORDER BY
