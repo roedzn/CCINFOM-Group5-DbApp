@@ -28,7 +28,7 @@ public class myJDBC {
                 System.out.println("10. Appointment Table");
                 System.out.println("11. Client Feedback Table");
                 System.out.println("12. Exit");
-                System.out.print("Enter your choice (1-11): ");
+                System.out.print("Enter your choice (1-12): ");
                 choice = scanner.nextInt();
 
                 switch (choice) {
