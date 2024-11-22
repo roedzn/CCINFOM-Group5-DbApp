@@ -3,9 +3,9 @@ SELECT
     COUNT(a.AppointmentID) AS TotalAppointments,
     SUM(t.AmountPaid) AS TotalRevenue
 FROM
-    Appointment a
-    INNER JOIN Service s ON a.ServiceID = s.ServiceID
-    INNER JOIN `Transaction` t ON s.TransactionID = t.TransactionID
+    Appointments a
+    INNER JOIN Services s ON a.ServiceID = s.ServiceID
+    INNER JOIN `Transactions` t ON s.TransactionID = t.TransactionID
 GROUP BY
     Month
 ORDER BY
