@@ -16,15 +16,15 @@
     - [x] Ensure normalization for tables (recheck EERD and schema)
     - [ ] Create queries for transactions and reports
       Transactions
-        - [ ] Query: Booking an appointment
-        - [ ] Query: Updating therapist availability
-        - [ ] Query: Paying for a service
+        - [x] Query: Booking an appointment
+        - [x] Query: Updating therapist availability
+        - [x] Query: Paying for a service
         - [ ] Query: Reporting client feedback
       Reports
-        - [ ] Query: Monthly Appointment Summary
+        - [x] Query: Monthly Appointment Summary
         - [ ] Query: Service Popularity Report
         - [ ] Query: Service Report
-        - [ ] Query: Revenue Report
+        - [x] Query: Revenue Report
     - [ ] Forward engineer the tables using mysql workbench
 - [ ] Create Java app
     - [ ] Create simple interface first
