@@ -77,11 +77,12 @@ CREATE TABLE Appointments (
     AppointmentID INT AUTO_INCREMENT PRIMARY KEY,
     ClientID INT NOT NULL,
     TimeslotID INT NOT NULL,
+    TherapistID INT NOT NULL,
     Status ENUM('Pending', 'Booked') DEFAULT 'Pending' NOT NULL,
     FOREIGN KEY (ClientID) REFERENCES Clients(ClientID)
         ON DELETE CASCADE 
         ON UPDATE CASCADE,
-    FOREIGN KEY (TimeslotID) REFERENCES Timeslots(TimeslotID)
+    FOREIGN KEY (TimeslotID, TherapistID) REFERENCES Timeslots(TimeslotID, TherapistID)
         ON DELETE CASCADE  
         ON UPDATE CASCADE
 );
@@ -216,17 +217,17 @@ INSERT INTO Timeslots (TherapistID, Day, StartTime, EndTime, Status) VALUES
 (10, 'Wednesday', '18:00:00', '19:00:00', 'Booked');
 
 
-INSERT INTO Appointments (ClientID, TimeslotID, Status) VALUES
-(1, 1, 'Booked'), 
-(2, 2, 'Pending'),
-(3, 3, 'Booked'),
-(4, 4, 'Pending'),
-(5, 5, 'Booked'),
-(6, 6, 'Pending'),
-(7, 7, 'Booked'),
-(8, 8, 'Pending'),
-(9, 9, 'Booked'),
-(10, 10, 'Pending');
+INSERT INTO Appointments (ClientID, TimeslotID, TherapistID, Status) VALUES
+(1, 1, 1, 'Booked'), 
+(2, 2, 2, 'Pending'),
+(3, 3, 3, 'Booked'),
+(4, 4, 4, 'Pending'),
+(5, 5, 5, 'Booked'),
+(6, 6, 6, 'Pending'),
+(7, 7, 7, 'Booked'),
+(8, 8, 8, 'Pending'),
+(9, 9, 9, 'Booked'),
+(10, 10, 10, 'Pending');
 
 
 INSERT INTO Services (ServiceTypeID, ReceivingClientID, TransactionID, AppointmentID, TherapistID, Duration) VALUES
@@ -253,6 +254,7 @@ INSERT INTO Therapist_Revenue (TherapistID, ServiceID, TherapistRevenue) VALUES
 (9, 9, 1300.00),
 (10, 10, 1100.00);
 
+
 INSERT INTO Client_Feedbacks (ClientID, AppointmentID, ClientRating, AdditionalFeedback) VALUES
 (1, 1, 5, 'Excellent service'),
 (2, 2, 4, 'Good, but room was cold'),
@@ -264,34 +266,3 @@ INSERT INTO Client_Feedbacks (ClientID, AppointmentID, ClientRating, AdditionalF
 (8, 8, 5, 'Shiatsu session was incredible!'),
 (9, 9, 4, 'Prenatal massage was great, but short'),
 (10, 10, 5, 'Excellent Thai massage, very refreshing');
-
--- Select from Clients
-SELECT * FROM Clients;
-
--- Select from Therapists
-SELECT * FROM Therapists;
-
--- Select from Therapist_Qualifications
-SELECT * FROM Therapist_Qualifications;
-
--- Select from Service_Types
-SELECT * FROM Service_Types;
-
--- Select from Transactions
-SELECT * FROM Transactions;
-
--- Select from Timeslots
-SELECT * FROM Timeslots;
-
--- Select from Appointments
-SELECT * FROM Appointments;
-
--- Select from Services
-SELECT * FROM Services;
-
--- Select from Therapist_Revenue
-SELECT * FROM Therapist_Revenue;
-
--- Select from Client_Feedbacks
-SELECT * FROM Client_Feedbacks;
-
