@@ -2,8 +2,12 @@
     "java.project.sourcePaths": [
         "UI\\src"
     ],
-    "java.project.referencedLibraries": [
-        "UI\\lib\\mysql-connector-j-9.1.0.jar",
-        "c:\\Program Files (x86)\\MySQL\\mysql-connector-j-9.1.0.jar"
-    ]
+    "java.project.referencedLibraries": {
+        "include": [
+            "UI\\lib\\mysql-connector-j-9.1.0.jar"
+        ],
+        "exclude": [
+            "UI/lib/mysql-connector-j-9.1.0.jar"
+        ]
+    }
 }
