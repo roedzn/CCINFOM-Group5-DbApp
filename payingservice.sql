@@ -4,9 +4,10 @@
 --@transactionDate: date of transaction.
 --@Amount_Paid: the amount paid by the paying client whcih should be equal to the service cost and therapist rate.
 
-INSERT INTO transactions (payingClientID, receivingClientID, transactionDate, AmountPaid)
-SELECT @payingClientID,@receivingClientID, @transactionDate, @Amount_Paid
-FROM serviceTypes si
-JOIN services s ON si.ServiceTypeID = s.ServiceTypeID
-JOIN therapists th ON s.TherapistID = th.TherapistID
-WHERE s.sessionCost + th.SessionRate = @Amount_Paid;
+INSERT INTO Transactions (PayingClientID, ReceivingClientID, TransactionDate, AmountPaid)
+SELECT @payingClientID, @receivingClientID, @transactionDate, @Amount_Paid
+FROM Service_Types si
+JOIN Services s ON si.ServiceTypeID = s.ServiceTypeID
+JOIN Therapists th ON s.TherapistID = th.TherapistID
+WHERE si.SessionCost + th.SessionRate = @Amount_Paid;
+
