@@ -12,7 +12,7 @@
     - [x] Add relation table
 - [ ] Create SQL Queries
     - [x] Make tables in line with proposal, schema, and EERD
-    - [ ] Make sample queries for testing
+    - [x] Make sample queries for testing
     - [x] Ensure normalization for tables (recheck EERD and schema)
     - [ ] Create queries for transactions and reports
       Transactions
