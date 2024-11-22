@@ -260,3 +260,16 @@ INSERT INTO Client_Feedbacks (ClientID, AppointmentID, ClientRating, AdditionalF
 (8, 8, 5, 'Shiatsu session was incredible!'),
 (9, 9, 4, 'Prenatal massage was great, but short'),
 (10, 10, 5, 'Excellent Thai massage, very refreshing');
+
+SELECT * FROM client_feedback;
+SELECT * FROM Client;
+SELECT * FROM Therapist;
+SELECT * FROM Therapist_Qualifications;
+SELECT * FROM Therapist_Availability;
+SELECT * FROM Therapist_Revenue;
+SELECT * FROM Service_Type;
+SELECT * FROM Transaction;
+SELECT * FROM Service;
+SELECT * FROM Timeslot;
+SELECT * FROM Appointment;
+SELECT * FROM Client_Feedback;
