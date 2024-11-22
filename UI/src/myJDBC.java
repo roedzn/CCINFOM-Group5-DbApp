@@ -12,22 +12,26 @@ public class myJDBC {
                     "G^79wNh.JW^sBcm"
             );
             Statement statement = connection.createStatement();
-                 try (Scanner scanner = new Scanner(System.in)) {
-                    System.out.println("Choose a table to view data:");
-                     System.out.println("1. Client Table");
-                     System.out.println("2. Therapist Table");
-                     System.out.println("3. Therapist_Qualifications Table");
-                     System.out.println("4. Therapist_Availability Table");
-                     System.out.println("5. Therapist_Revenue Table");
-                     System.out.println("6. Service_Type Table");
-                     System.out.println("7. Transaction Table");
-                     System.out.println("8. Service Table");
-                     System.out.println("9. Timeslot Table");
-                     System.out.println("10. Appointment Table");
-                     System.out.print("Enter your choice (1-10): ");
-                     int choice = scanner.nextInt();
+            try (Scanner scanner = new Scanner(System.in)) {
+                int choice = 0;
+                while(choice != 12){
+                System.out.println("Choose a table to view data:");
+                System.out.println("1. Client Table");
+                System.out.println("2. Therapist Table");
+                System.out.println("3. Therapist_Qualifications Table");
+                System.out.println("4. Therapist_Availability Table");
+                System.out.println("5. Therapist_Revenue Table");
+                System.out.println("6. Service_Type Table");
+                System.out.println("7. Transaction Table");
+                System.out.println("8. Service Table");
+                System.out.println("9. Timeslot Table");
+                System.out.println("10. Appointment Table");
+                System.out.println("11. Client Feedback Table");
+                System.out.println("12. Exit");
+                System.out.print("Enter your choice (1-11): ");
+                choice = scanner.nextInt();
 
-         switch (choice) {
+                switch (choice) {
                     case 1:
                         System.out.println("Selected: Client Table");
                         // Add functionality to fetch data from the Client table
@@ -41,7 +45,7 @@ public class myJDBC {
                             String phone = resultSet1.getString("Phone");
                             String email = resultSet1.getString("Email");
                             String address = resultSet1.getString("Address");
-         
+
                             // Print each row of the result
                             System.out.println("ClientID: " + clientID);
                             System.out.println("FirstName: " + firstName);
@@ -54,7 +58,7 @@ public class myJDBC {
                             System.out.println();
                         }
                         break;
-         
+
                     case 2:
                         System.out.println("Selected: Therapist Table");
                         // Add functionality to fetch data from the Therapist table
@@ -66,7 +70,7 @@ public class myJDBC {
                             String sex = resultSet2.getString("Sex");
                             Date birthdate = resultSet2.getDate("Birthdate");
                             double sessionRate = resultSet2.getDouble("SessionRate");
-         
+
                             // Print each row of the result
                             System.out.println("TherapistID: " + therapistID);
                             System.out.println("FirstName: " + firstName);
@@ -77,7 +81,7 @@ public class myJDBC {
                             System.out.println();
                         }
                         break;
-         
+
                     case 3:
                         System.out.println("Selected: Therapist_Qualifications Table");
                         // Add functionality to fetch data from the Therapist_Qualifications table
@@ -87,7 +91,7 @@ public class myJDBC {
                             int therapistID = resultSet3.getInt("TherapistID");
                             String relevantExp = resultSet3.getString("RelevantExp");
                             int yearsExp = resultSet3.getInt("YearsExp");
-         
+
                             // Print each row of the result
                             System.out.println("QualificationID: " + qualificationID);
                             System.out.println("TherapistID: " + therapistID);
@@ -96,7 +100,7 @@ public class myJDBC {
                             System.out.println();
                         }
                         break;
-         
+
                     case 4:
                         System.out.println("Selected: Therapist_Availability Table");
                         // Add functionality to fetch data from the Therapist_Availability table
@@ -106,7 +110,7 @@ public class myJDBC {
                             int therapistID = resultSet4.getInt("TherapistID");
                             String day = resultSet4.getString("Day");
                             Time time = resultSet4.getTime("Time");
-         
+
                             // Print each row of the result
                             System.out.println("TimeslotID: " + timeslotID);
                             System.out.println("TherapistID: " + therapistID);
@@ -115,7 +119,7 @@ public class myJDBC {
                             System.out.println();
                         }
                         break;
-         
+
                     case 5:
                         System.out.println("Selected: Therapist_Revenue Table");
                         // Add functionality to fetch data from the Therapist_Revenue table
@@ -124,7 +128,7 @@ public class myJDBC {
                             int revenueID = resultSet5.getInt("RevenueID");
                             int therapistID = resultSet5.getInt("TherapistID");
                             double therapistRevenue = resultSet5.getDouble("TherapistRevenue");
-         
+
                             // Print each row of the result
                             System.out.println("RevenueID: " + revenueID);
                             System.out.println("TherapistID: " + therapistID);
@@ -132,7 +136,7 @@ public class myJDBC {
                             System.out.println();
                         }
                         break;
-         
+
                     case 6:
                         System.out.println("Selected: Service_Type Table");
                         // Add functionality to fetch data from the Service_Type table
@@ -142,7 +146,7 @@ public class myJDBC {
                             String type = resultSet6.getString("Type");
                             String description = resultSet6.getString("Description");
                             double sessionCost = resultSet6.getDouble("SessionCost");
-         
+
                             // Print each row of the result
                             System.out.println("ServiceTypeID: " + serviceTypeID);
                             System.out.println("Type: " + type);
@@ -151,7 +155,7 @@ public class myJDBC {
                             System.out.println();
                         }
                         break;
-         
+
                     case 7:
                         System.out.println("Selected: Transaction Table");
                         // Add functionality to fetch data from the Transaction table
@@ -162,7 +166,7 @@ public class myJDBC {
                             int receivingClientID = resultSet7.getInt("ReceivingClientID");
                             Date transactionDate = resultSet7.getDate("TransactionDate");
                             double amountPaid = resultSet7.getDouble("AmountPaid");
-         
+
                             // Print each row of the result
                             System.out.println("TransactionID: " + transactionID);
                             System.out.println("PayingClientID: " + payingClientID);
@@ -172,7 +176,7 @@ public class myJDBC {
                             System.out.println();
                         }
                         break;
-         
+
                     case 8:
                         System.out.println("Selected: Service Table");
                         // Add functionality to fetch data from the Service table
@@ -183,7 +187,7 @@ public class myJDBC {
                             int transactionID = resultSet8.getInt("TransactionID");
                             int therapistID = resultSet8.getInt("TherapistID");
                             Time duration = resultSet8.getTime("Duration");
-         
+
                             // Print each row of the result
                             System.out.println("ServiceID: " + serviceID);
                             System.out.println("ServiceTypeID: " + serviceTypeID);
@@ -193,7 +197,7 @@ public class myJDBC {
                             System.out.println();
                         }
                         break;
-         
+
                     case 9:
                         System.out.println("Selected: Timeslot Table");
                         // Add functionality to fetch data from the Timeslot table
@@ -203,7 +207,7 @@ public class myJDBC {
                             String day = resultSet9.getString("Day");
                             Time time = resultSet9.getTime("Time");
                             String status = resultSet9.getString("Status");
-         
+
                             // Print each row of the result
                             System.out.println("TimeslotID: " + timeslotID);
                             System.out.println("Day: " + day);
@@ -212,7 +216,7 @@ public class myJDBC {
                             System.out.println();
                         }
                         break;
-         
+
                     case 10:
                         System.out.println("Selected: Appointment Table");
                         // Add functionality to fetch data from the Appointment table
@@ -223,7 +227,7 @@ public class myJDBC {
                             int serviceID = resultSet10.getInt("ServiceID");
                             int timeslotID = resultSet10.getInt("TimeslotID");
                             String status = resultSet10.getString("Status");
-         
+
                             // Print each row of the result
                             System.out.println("AppointmentID: " + appointmentID);
                             System.out.println("ClientID: " + clientID);
@@ -235,34 +239,35 @@ public class myJDBC {
                         break;
 
                     case 11:
-                    System.out.println("Selected: Client Feedback");
-                    ResultSet resultSet11 = statement.executeQuery("SELECT * FROM client_feedback");
-                    while (resultSet11.next()) {
-                        int clientFeedbackID = resultSet11.getInt("ClientFeedbackID");
-                        int clientID = resultSet11.getInt("ClientID");
-                        int appointmentID = resultSet11.getInt("AppointmentID");
-                        int clientRating = resultSet11.getInt("ClientRating");
-                        String additionalFeedback = resultSet11.getString("AdditionalFeedback");
-   
-                        // Print each row of the result
-                        System.out.println("ClientFeedbackID: " + clientFeedbackID);
-                        System.out.println("ClientID: " + clientID);
-                        System.out.println("AppointmentID: " + appointmentID);
-                        System.out.println("ClientRating: " + clientRating);
-                        System.out.println("AdditionalFeedback: " + additionalFeedback);
-                        System.out.println();
-                    }
-                    break;
-                    
+                        System.out.println("Selected: Client Feedback");
+                        ResultSet resultSet11 = statement.executeQuery("SELECT * FROM client_feedback");
+                        while (resultSet11.next()) {
+                            int clientFeedbackID = resultSet11.getInt("ClientFeedbackID");
+                            int clientID = resultSet11.getInt("ClientID");
+                            int appointmentID = resultSet11.getInt("AppointmentID");
+                            int clientRating = resultSet11.getInt("ClientRating");
+                            String additionalFeedback = resultSet11.getString("AdditionalFeedback");
+
+                            // Print each row of the result
+                            System.out.println("ClientFeedbackID: " + clientFeedbackID);
+                            System.out.println("ClientID: " + clientID);
+                            System.out.println("AppointmentID: " + appointmentID);
+                            System.out.println("ClientRating: " + clientRating);
+                            System.out.println("AdditionalFeedback: " + additionalFeedback);
+                            System.out.println();
+                        }
+                        break;
+
                     default:
                         System.out.println("Invalid choice.");
                         break;
-         }
                 }
-            
+                }
+            }
 
-            
-           
+
+
+
 
         }catch (SQLException e){
             e.printStackTrace();
