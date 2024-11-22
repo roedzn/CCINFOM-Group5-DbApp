@@ -253,7 +253,6 @@ INSERT INTO Therapist_Revenue (TherapistID, ServiceID, TherapistRevenue) VALUES
 (9, 9, 1300.00),
 (10, 10, 1100.00);
 
-
 INSERT INTO Client_Feedbacks (ClientID, AppointmentID, ClientRating, AdditionalFeedback) VALUES
 (1, 1, 5, 'Excellent service'),
 (2, 2, 4, 'Good, but room was cold'),
