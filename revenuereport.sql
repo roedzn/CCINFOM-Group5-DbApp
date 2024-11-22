@@ -1,12 +1,13 @@
-select sum(t.AmountPaid) as Payments
-from services s join  transactions t ON t.TransactionID = s.TransactionID
-join appointments ap ON s.serviceID = ap.ServiceID;
+SELECT SUM(t.AmountPaid) AS Payments
+FROM Services s
+JOIN Transactions t ON t.TransactionID = s.TransactionID
+JOIN Appointments ap ON s.AppointmentID = ap.AppointmentID;
 
-
-select sum(t.AmountPaid) as totalBookedPayments
-from services s join  transactions t ON t.TransactionID = s.TransactionID
-join appointments ap ON s.serviceID = ap.ServiceID
-where ap.status = "booked";
+SELECT SUM(t.AmountPaid) AS totalBookedPayments
+FROM Services s
+JOIN Transactions t ON t.TransactionID = s.TransactionID
+JOIN Appointments ap ON s.AppointmentID = ap.AppointmentID
+WHERE ap.Status = 'Booked';
 
 select sum(tr.TherapistRevenue) as totalTherapistRevenue
 from therapist_revenue tr
