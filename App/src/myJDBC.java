@@ -417,7 +417,10 @@ public class myJDBC {
         SELECT t.FirstName, t.LastName, COUNT(a.AppointmentID) AS AppointmentCount
         FROM Therapists t
         LEFT JOIN Appointments a ON t.TherapistID = a.TherapistID
-        WHERE MONTH(a.Status) = MONTH(CURRENT_DATE()) AND a.Status = 'Booked'
+        JOIN Timeslots ts ON a.TimeslotID = ts.TimeslotID
+        WHERE a.Status = 'Booked' 
+          AND MONTH(ts.StartTime) = MONTH(CURRENT_DATE()) 
+          AND YEAR(ts.StartTime) = YEAR(CURRENT_DATE())
         GROUP BY t.TherapistID
         ORDER BY AppointmentCount DESC;
     """;
@@ -434,6 +437,7 @@ public class myJDBC {
         System.err.println("Error generating Monthly Appointment Summary: " + e.getMessage());
     }
 }
+
 
 private static void generateServicePopularityReport(Connection connection) {
     System.out.println("\nGenerating Service Popularity Report...");
