@@ -34,7 +34,8 @@ public class myJDBC {
                     System.out.println("2. Read");
                     System.out.println("3. Update");
                     System.out.println("4. Delete");
-                    System.out.println("5. Exit\n");
+                    System.out.println("5. Transactions");
+                    System.out.println("6. Exit\n");
                     System.out.println("Enter your choice (1-5): ");
                     uberChoice = scanner.nextInt();
                     
@@ -200,6 +201,32 @@ public class myJDBC {
 
                         case 5:
                             System.out.println("\nSelected: Transactions\n");
+                            System.out.println("\n\nChoose a transaction:");
+                            System.out.println("1. Book appointment");
+                            System.out.println("2. Pay for service");
+                            System.out.println("3. Record client feedback");
+                            System.out.println("4. Exit\n");
+                            System.out.println("Enter your choice (1-4): ");
+                            uberChoice = scanner.nextInt();
+                            
+                            
+                            switch (uberChoice) {
+                                case 1:
+                                    bookAppointment(connection, metaData);
+                                    break;
+                                case 2:
+                                    payForService(connection, metaData);
+                                    break;
+                                case 3:
+                                    recordClientFeedback(connection, metaData);
+                                    break;
+                                case 4:
+                                    System.out.println("Exiting...");
+                                    break;
+                                default:
+                                    System.out.println("Invalid choice. Please try again.");
+                            }
+
                             break;
                         case 6:
                             System.out.println("\n\nTerminating program..\n");
@@ -336,4 +363,20 @@ public class myJDBC {
         }
 
     }
+    
+    private static void bookAppointment(Connection connection, DatabaseMetaData metaData) {
+        System.out.println("\nBooking an appointment...");
+        insertRecord(connection, metaData, "Appointments");
+    }
+    private static void payForService(Connection connection, DatabaseMetaData metaData) {
+        System.out.println("\nPaying for a service...");
+        insertRecord(connection, metaData, "Transactions");
+    }
+    private static void recordClientFeedback(Connection connection, DatabaseMetaData metaData) {
+        System.out.println("\nRecording client feedback...");
+        insertRecord(connection, metaData, "Client_Feedbacks");
+    }
+
+
+
 }
