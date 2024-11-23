@@ -199,7 +199,7 @@ public class myJDBC {
                             break;
 
                         case 5:
-                            System.out.println("\n\nTerminating program..\n");
+                            System.out.println("\nSelected: Transactions\n");
                             break;
                     }
 
