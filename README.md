@@ -25,7 +25,7 @@
         - [x] Query: Service Popularity Report
         - [x] Query: Service Report
         - [x] Query: Revenue Report
-    - [ ] Forward engineer the tables using mysql workbench
+    - [x] Forward engineer the tables using mysql workbench
 - [x] Create Java app
     - [x] Create simple interface first
     - [x] Connect Java to MYSQL local host
