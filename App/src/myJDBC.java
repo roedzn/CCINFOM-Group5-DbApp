@@ -40,23 +40,22 @@ public class myJDBC {
                     
                     switch (uberChoice){
                         case 1:
-                        System.out.println("\nSelected: Create mode\n");
+                            System.out.println("\nSelected: Create mode\n");
 
                             choice = 0;
-                            while(choice != tableNames.size()){
+                            while (choice != tableNames.size() + 1) { // Include the 'Exit' option
                                 tabResultSet.beforeFirst();
                                 listTables(tabResultSet);
                                 String tableName;
 
                                 System.out.print("Enter your choice (1-" + (tableNames.size() + 1) + "): ");
                                 choice = scanner.nextInt();
-                                choice--;
 
-                                if (choice >= 1 && choice < tableNames.size() && choice != tableNames.size()) {
-                                    tableName = tableNames.get(choice); // Get the selected table
+                                if (choice >= 1 && choice <= tableNames.size()) { // Valid table selection
+                                    tableName = tableNames.get(choice - 1); // Convert to 0-based index
                                     System.out.println("\nSelected Table: " + tableName + "\n");
                                     insertRecord(connection, metaData, tableName);
-                                } else if (choice == tableNames.size()) {
+                                } else if (choice == tableNames.size() + 1) { // Exit option
                                     System.out.println("Exiting...");
                                 } else {
                                     System.out.println("Invalid choice. Please try again.");
@@ -64,6 +63,7 @@ public class myJDBC {
                                 System.out.println();
                             }
                             break;
+
 
                         case 2:
                             System.out.println("\nSelected: Read mode\n");
@@ -200,6 +200,9 @@ public class myJDBC {
 
                         case 5:
                             System.out.println("\nSelected: Transactions\n");
+                            break;
+                        case 6:
+                            System.out.println("\n\nTerminating program..\n");
                             break;
                     }
 
