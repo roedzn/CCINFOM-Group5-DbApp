@@ -205,9 +205,10 @@ public class myJDBC {
                             System.out.println("\nChoose a transaction:");
                             System.out.println("1. Book appointment");
                             System.out.println("2. Pay for service");
-                            System.out.println("3. Record client feedback");
-                            System.out.println("4. Exit\n");
-                            System.out.println("Enter your choice (1-4): ");
+                            System.out.println("3. Update therapist");
+                            System.out.println("4. Record client feedback");
+                            System.out.println("5. Exit\n");
+                            System.out.println("Enter your choice (1-5): ");
                             uberChoice = scanner.nextInt();
                             
                             
@@ -219,9 +220,12 @@ public class myJDBC {
                                     payForService(connection, metaData);
                                     break;
                                 case 3:
-                                    recordClientFeedback(connection, metaData);
+                                    updateTimeslot(connection);
                                     break;
                                 case 4:
+                                    recordClientFeedback(connection, metaData);
+                                    break;
+                                case 5:
                                     System.out.println("Exiting...");
                                     break;
                                 default:
@@ -410,6 +414,42 @@ public class myJDBC {
         System.out.println("\nRecording client feedback...");
         insertRecord(connection, metaData, "Client_Feedbacks");
     }
+    private static void updateTimeslot(Connection connection) {
+        Scanner scanner = new Scanner(System.in);
+
+        try {
+            System.out.println("\nUpdate Timeslot Information");
+            System.out.print("Enter TherapistID: ");
+            int therapistId = scanner.nextInt();
+            System.out.print("Enter TimeslotID: ");
+            int timeslotId = scanner.nextInt();
+
+            scanner.nextLine(); // Consume newline
+
+            System.out.print("Enter the column to update (e.g., Day, StartTime, EndTime, Status): ");
+            String columnName = scanner.nextLine();
+
+            System.out.print("Enter the new value for " + columnName + ": ");
+            String newValue = scanner.nextLine();
+
+            // Prepare the update query
+            String updateQuery = "UPDATE Timeslots SET " + columnName + " = ? WHERE TherapistID = ? AND TimeslotID = ?";
+
+            try (PreparedStatement prepst = connection.prepareStatement(updateQuery)) {
+                prepst.setString(1, newValue);
+                prepst.setInt(2, therapistId);
+                prepst.setInt(3, timeslotId);
+
+                int rowsUpdated = prepst.executeUpdate();
+                System.out.println(rowsUpdated + " row(s) updated.\n");
+            } catch (SQLException e) {
+                System.out.println("Error updating timeslot: " + e.getMessage() + "\n");
+            }
+        } catch (Exception e) {
+            System.out.println("Invalid input. Please try again.\n");
+        }
+    }
+
     
     private static void generateMonthlyAppointmentSummary(Connection connection) {
     System.out.println("\nGenerating Monthly Appointment Summary...");
