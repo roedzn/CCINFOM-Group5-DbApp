@@ -1,344 +1,336 @@
 
-
 import java.sql.*;
-import java.util.Scanner;
+import java.util.*;
+
 
 public class myJDBC {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         try{
             Connection connection = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/massageclinicdbms",
-                    "root",
-                    "G^79wNh.JW^sBcm"
+                    "jdbc:mysql://51.79.175.191:8888/massageClinicDBMS?user=group5&password=EkRqBrfqr2CxFRXET8988p98zMZZxUmzNwFL9bwxZPxzQnUsObiuiDVepOa5l6GZ",
+                    "group5",
+                    "EkRqBrfqr2CxFRXET8988p98zMZZxUmzNwFL9bwxZPxzQnUsObiuiDVepOa5l6GZ"
             );
-            Statement statement = connection.createStatement();
+            Statement statement = connection.createStatement(
+                ResultSet.TYPE_SCROLL_INSENSITIVE, 
+                ResultSet.CONCUR_READ_ONLY
+            );
             try (Scanner scanner = new Scanner(System.in)) {
                 int uberChoice = 0;
+
+                DatabaseMetaData metaData = connection.getMetaData();
+                ResultSet tabResultSet = metaData.getTables(null, null, "%", new String[]{"TABLE"});
+                ArrayList<String> tableNames = new ArrayList<>();
+
+                while (tabResultSet.next()) {
+                    tableNames.add(tabResultSet.getString("TABLE_NAME"));
+                }
+
                 while(uberChoice != 5){
-                    System.out.println("Choose a mode:");
+                    int choice;
+
+                    System.out.println("\n\nChoose a mode:");
                     System.out.println("1. Create");
-                    System.out.println("2. read");
-                    System.out.println("3. update");
-                    System.out.println("4. delete");
-                    System.out.println("5. exit");
+                    System.out.println("2. Read");
+                    System.out.println("3. Update");
+                    System.out.println("4. Delete");
+                    System.out.println("5. Exit\n");
                     System.out.println("Enter your choice (1-5): ");
                     uberChoice = scanner.nextInt();
-
+                    
                     switch (uberChoice){
                         case 1:
-                            int choice = 0;
-                            while(choice != 11){
-                                System.out.println("selected: Create mode");
-                                System.out.println("Choose a table to add data:");
-                                System.out.println("1. Client Table");
-                                System.out.println("2. Therapist Table");
-                                System.out.println("3. Therapist_Qualifications Table");
-                                System.out.println("4. Therapist_Revenue Table");
-                                System.out.println("5. Service_Type Table");
-                                System.out.println("6. Transaction Table");
-                                System.out.println("7. Service Table");
-                                System.out.println("8. Timeslot Table");
-                                System.out.println("9. Appointment Table");
-                                System.out.println("10. Client Feedback Table");
-                                System.out.println("11. Exit");
-                                System.out.print("Enter your choice (1-11): ");
+                        System.out.println("\nSelected: Create mode\n");
+
+                            choice = 0;
+                            while(choice != tableNames.size()){
+                                tabResultSet.beforeFirst();
+                                listTables(tabResultSet);
+                                String tableName;
+
+                                System.out.print("Enter your choice (1-" + (tableNames.size() + 1) + "): ");
                                 choice = scanner.nextInt();
+                                choice--;
 
-                                switch(choice){
-                                    case 1:
-                                        String sql = "INSERT INTO Clients (FirstName, LastName, Sex, Birthdate, Phone, Email, Address) " +
-                                                "VALUES (?, ?, ?, ?, ?, ?, ?)";
-                                        PreparedStatement pstmt = connection.prepareStatement(sql); {
-                                        scanner.nextLine();
-                                        System.out.print("Enter First Name: ");
-                                        String firstName = scanner.nextLine();
-
-                                        System.out.print("Enter Last Name: ");
-                                        String lastName = scanner.nextLine();
-
-                                        System.out.print("Enter Sex (M/F): ");
-                                        String sex = scanner.nextLine();
-
-                                        System.out.print("Enter Birthdate (yyyy-MM-dd): ");
-                                        String birthdate = scanner.nextLine();
-
-                                        System.out.print("Enter Phone: ");
-                                        String phone = scanner.nextLine();
-
-                                        System.out.print("Enter Email: ");
-                                        String email = scanner.nextLine();
-
-                                        System.out.print("Enter Address: ");
-                                        String address = scanner.nextLine();
-
-                                        // Set the values for the placeholders
-                                        pstmt.setString(1, firstName);
-                                        pstmt.setString(2, lastName);
-                                        pstmt.setString(3, sex);
-                                        pstmt.setDate(4, java.sql.Date.valueOf(birthdate));
-                                        pstmt.setString(5, phone);
-                                        pstmt.setString(6, email);
-                                        pstmt.setString(7, address);
-
-                                        // Execute the insert operation
-                                        int rowsInserted = pstmt.executeUpdate();
-
-                                        if (rowsInserted > 0) {
-                                            System.out.println("A new client record was inserted successfully!");
-                                        }
-                                    }
+                                if (choice >= 1 && choice < tableNames.size() && choice != tableNames.size()) {
+                                    tableName = tableNames.get(choice); // Get the selected table
+                                    System.out.println("\nSelected Table: " + tableName + "\n");
+                                    insertRecord(connection, metaData, tableName);
+                                } else if (choice == tableNames.size()) {
+                                    System.out.println("Exiting...");
+                                } else {
+                                    System.out.println("Invalid choice. Please try again.");
                                 }
+                                System.out.println();
                             }
-
-
                             break;
 
                         case 2:
-                            System.out.println("Selected: Read mode");
-                            int choice2 = 0;
-                            while(choice2 != 11){
-                                System.out.println("Choose a table to view data:");
-                                System.out.println("1. Client Table");
-                                System.out.println("2. Therapist Table");
-                                System.out.println("3. Therapist_Qualifications Table");
-                                System.out.println("4. Therapist_Revenue Table");
-                                System.out.println("5. Service_Type Table");
-                                System.out.println("6. Transaction Table");
-                                System.out.println("7. Service Table");
-                                System.out.println("8. Timeslot Table");
-                                System.out.println("9. Appointment Table");
-                                System.out.println("10. Client Feedback Table");
-                                System.out.println("11. Exit");
-                                System.out.print("Enter your choice (1-11): ");
-                                choice2 = scanner.nextInt();
+                            System.out.println("\nSelected: Read mode\n");
+                            choice = 0;
+                            while(choice != tableNames.size()){
+                                tabResultSet.beforeFirst();
+                                listTables(tabResultSet);
 
-                                switch (choice2) {
-                                    case 1:
-                                        System.out.println("Selected: Client Table");
-                                        ResultSet resultSet1 = statement.executeQuery("SELECT * FROM Clients");
-                                        while (resultSet1.next()) {
-                                            int clientID = resultSet1.getInt("ClientID");
-                                            String firstName = resultSet1.getString("FirstName");
-                                            String lastName = resultSet1.getString("LastName");
-                                            String sex = resultSet1.getString("Sex");
-                                            Date birthdate = resultSet1.getDate("Birthdate");
-                                            String phone = resultSet1.getString("Phone");
-                                            String email = resultSet1.getString("Email");
-                                            String address = resultSet1.getString("Address");
+                                System.out.print("Enter your choice (1-" + (tableNames.size() + 1) + "): ");
+                                choice = scanner.nextInt();
+                                choice--;
 
-                                            System.out.println("ClientID: " + clientID);
-                                            System.out.println("FirstName: " + firstName);
-                                            System.out.println("LastName: " + lastName);
-                                            System.out.println("Sex: " + sex);
-                                            System.out.println("Birthdate: " + birthdate);
-                                            System.out.println("Phone: " + phone);
-                                            System.out.println("Email: " + email);
-                                            System.out.println("Address: " + address);
-                                            System.out.println();
-                                        }
-                                        break;
+                                
 
-                                    case 2:
-                                        System.out.println("Selected: Therapist Table");
-                                        ResultSet resultSet2 = statement.executeQuery("SELECT * FROM Therapists");
-                                        while (resultSet2.next()) {
-                                            int therapistID = resultSet2.getInt("TherapistID");
-                                            String firstName = resultSet2.getString("FirstName");
-                                            String lastName = resultSet2.getString("LastName");
-                                            String sex = resultSet2.getString("Sex");
-                                            Date birthdate = resultSet2.getDate("Birthdate");
-                                            double sessionRate = resultSet2.getDouble("SessionRate");
+                                if (choice >= 0 && choice < tableNames.size()) {
+                                    String tableName = tableNames.get(choice);
+                                    System.out.println("Selected Table: " + tableName + "\n\n");
 
-                                            System.out.println("TherapistID: " + therapistID);
-                                            System.out.println("FirstName: " + firstName);
-                                            System.out.println("LastName: " + lastName);
-                                            System.out.println("Sex: " + sex);
-                                            System.out.println("Birthdate: " + birthdate);
-                                            System.out.println("SessionRate: " + sessionRate);
-                                            System.out.println();
-                                        }
-                                        break;
+                                    ResultSet printSet = statement.executeQuery("SELECT * FROM " + tableName);
+                                    ResultSetMetaData printMetaData = printSet.getMetaData();
 
-                                    case 3:
-                                        System.out.println("Selected: Therapist_Qualifications Table");
-                                        ResultSet resultSet3 = statement.executeQuery("SELECT * FROM Therapist_Qualifications");
-                                        while (resultSet3.next()) {
-                                            int qualificationID = resultSet3.getInt("QualificationID");
-                                            int therapistID = resultSet3.getInt("TherapistID");
-                                            String relevantExp = resultSet3.getString("RelevantExp");
-                                            int yearsExp = resultSet3.getInt("YearsExp");
+                                    printTable(printSet, printMetaData);
+                                    
 
-                                            System.out.println("QualificationID: " + qualificationID);
-                                            System.out.println("TherapistID: " + therapistID);
-                                            System.out.println("RelevantExp: " + relevantExp);
-                                            System.out.println("YearsExp: " + yearsExp);
-                                            System.out.println();
-                                        }
-                                        break;
-
-                                    case 4:
-                                        System.out.println("Selected: Therapist_Revenue Table");
-                                        ResultSet resultSet4 = statement.executeQuery("SELECT * FROM Therapist_Revenue");
-                                        while (resultSet4.next()) {
-                                            int revenueID = resultSet4.getInt("RevenueID");
-                                            int therapistID = resultSet4.getInt("TherapistID");
-                                            double therapistRevenue = resultSet4.getDouble("TherapistRevenue");
-
-                                            System.out.println("RevenueID: " + revenueID);
-                                            System.out.println("TherapistID: " + therapistID);
-                                            System.out.println("TherapistRevenue: " + therapistRevenue);
-                                            System.out.println();
-                                        }
-                                        break;
-
-                                    case 5:
-                                        System.out.println("Selected: Service_Type Table");
-                                        ResultSet resultSet5 = statement.executeQuery("SELECT * FROM Service_Types");
-                                        while (resultSet5.next()) {
-                                            int serviceTypeID = resultSet5.getInt("ServiceTypeID");
-                                            String type = resultSet5.getString("Type");
-                                            String description = resultSet5.getString("Description");
-                                            double sessionCost = resultSet5.getDouble("SessionCost");
-
-                                            System.out.println("ServiceTypeID: " + serviceTypeID);
-                                            System.out.println("Type: " + type);
-                                            System.out.println("Description: " + description);
-                                            System.out.println("SessionCost: " + sessionCost);
-                                            System.out.println();
-                                        }
-                                        break;
-
-                                    case 6:
-                                        System.out.println("Selected: Transaction Table");
-                                        ResultSet resultSet6 = statement.executeQuery("SELECT * FROM Transactions");
-                                        while (resultSet6.next()) {
-                                            int transactionID = resultSet6.getInt("TransactionID");
-                                            int payingClientID = resultSet6.getInt("PayingClientID");
-                                            int receivingClientID = resultSet6.getInt("ReceivingClientID");
-                                            Date transactionDate = resultSet6.getDate("TransactionDate");
-                                            double amountPaid = resultSet6.getDouble("AmountPaid");
-
-                                            System.out.println("TransactionID: " + transactionID);
-                                            System.out.println("PayingClientID: " + payingClientID);
-                                            System.out.println("ReceivingClientID: " + receivingClientID);
-                                            System.out.println("TransactionDate: " + transactionDate);
-                                            System.out.println("AmountPaid: " + amountPaid);
-                                            System.out.println();
-                                        }
-                                        break;
-
-                                    case 7:
-                                        System.out.println("Selected: Service Table");
-                                        ResultSet resultSet7 = statement.executeQuery("SELECT * FROM Services");
-                                        while (resultSet7.next()) {
-                                            int serviceID = resultSet7.getInt("ServiceID");
-                                            int serviceTypeID = resultSet7.getInt("ServiceTypeID");
-                                            int transactionID = resultSet7.getInt("TransactionID");
-                                            int therapistID = resultSet7.getInt("TherapistID");
-                                            Time duration = resultSet7.getTime("Duration");
-
-                                            System.out.println("ServiceID: " + serviceID);
-                                            System.out.println("ServiceTypeID: " + serviceTypeID);
-                                            System.out.println("TransactionID: " + transactionID);
-                                            System.out.println("TherapistID: " + therapistID);
-                                            System.out.println("Duration: " + duration);
-                                            System.out.println();
-                                        }
-                                        break;
-
-                                    case 8:
-                                        System.out.println("Selected: Timeslot Table");
-                                        ResultSet resultSet8 = statement.executeQuery("SELECT * FROM Timeslots");
-                                        while (resultSet8.next()) {
-                                            int timeslotID = resultSet8.getInt("TimeslotID");
-                                            String day = resultSet8.getString("Day");
-                                            Time time = resultSet8.getTime("Time");
-                                            String status = resultSet8.getString("Status");
-
-                                            System.out.println("TimeslotID: " + timeslotID);
-                                            System.out.println("Day: " + day);
-                                            System.out.println("Time: " + time);
-                                            System.out.println("Status: " + status);
-                                            System.out.println();
-                                        }
-                                        break;
-
-                                    case 9:
-                                        System.out.println("Selected: Appointment Table");
-                                        ResultSet resultSet9 = statement.executeQuery("SELECT * FROM Appointments");
-                                        while (resultSet9.next()) {
-                                            int appointmentID = resultSet9.getInt("AppointmentID");
-                                            int clientID = resultSet9.getInt("ClientID");
-                                            int timeslotID = resultSet9.getInt("TimeslotID");
-                                            String status = resultSet9.getString("Status");
-
-                                            System.out.println("AppointmentID: " + appointmentID);
-                                            System.out.println("ClientID: " + clientID);
-                                            System.out.println("TimeslotID: " + timeslotID);
-                                            System.out.println("Status: " + status);
-                                            System.out.println();
-                                        }
-                                        break;
-
-                                    case 10:
-                                        System.out.println("Selected: Client Feedback Table");
-                                        ResultSet resultSet10 = statement.executeQuery("SELECT * FROM Client_Feedbacks");
-                                        while (resultSet10.next()) {
-                                            int feedbackID = resultSet10.getInt("FeedbackID");
-                                            int clientID = resultSet10.getInt("ClientID");
-                                            int appointmentID = resultSet10.getInt("AppointmentID");
-                                            int clientRating = resultSet10.getInt("ClientRating");
-                                            String additionalFeedback = resultSet10.getString("AdditionalFeedback");
-
-                                            System.out.println("FeedbackID: " + feedbackID);
-                                            System.out.println("ClientID: " + clientID);
-                                            System.out.println("AppointmentID: " + appointmentID);
-                                            System.out.println("ClientRating: " + clientRating);
-                                            System.out.println("AdditionalFeedback: " + additionalFeedback);
-                                            System.out.println();
-                                        }
-                                        break;
-
-                                    case 11:
-                                        System.out.println("Exiting...");
-                                        break;
-
-                                    default:
-                                        System.out.println("Invalid choice, please try again.");
-                                        break;
+                                } else if (choice == tableNames.size()) {
+                                    System.out.println("Exiting...");
+                                } else {
+                                    System.out.println("Invalid choice. Please try again.");
                                 }
+                                System.out.println();
 
                             }
                             break;
 
                         case 3:
-                            System.out.println("Selected: Update mode");
+                            System.out.println("\nSelected: Update mode\n");
+                            choice = 0;
+                        
+                            while (choice != tableNames.size()) {
+                                tabResultSet.beforeFirst();
+                                listTables(tabResultSet);
+                        
+                                System.out.print("Enter your choice (1-" + (tableNames.size() + 1) + "): ");
+                                choice = scanner.nextInt();
+                                choice--;
+                        
+                                if (choice >= 0 && choice < tableNames.size()) {
+                                    String tableName = tableNames.get(choice);
+                                    System.out.println("Selected Table: " + tableName + "\n\n");
+
+                                    ResultSet printSet = statement.executeQuery("SELECT * FROM " + tableName);
+                                    ResultSetMetaData printMetaData = printSet.getMetaData();
+
+                                    printTable(printSet, printMetaData);
+                                    scanner.nextLine();
+
+                                    System.out.print("\nEnter column to update: ");
+                                    String colName = scanner.nextLine();
+                                    
+                                    System.out.print("Enter the new value for column '" + colName + "': ");
+                                    String newValue = scanner.nextLine();
+
+                                    String exampleCondition = "";
+                                    if (printSet.next()) { // Move cursor to the first row
+                                        exampleCondition = printSet.getMetaData().getColumnName(1) + " = '" + printSet.getString(1) + "'";
+                                    }
+
+                                    System.out.print("Enter the WHERE condition to identify the record (ex. '" + exampleCondition + "'): ");
+                                    String condition = scanner.nextLine();
+
+                                    String updateQuery = "UPDATE " + tableName + " SET " + colName + " = ? WHERE " + condition;
+
+                                    try (PreparedStatement prepst = connection.prepareStatement(updateQuery)) {
+                                        prepst.setString(1, newValue);
+                                        int rowsUpdated = prepst.executeUpdate();
+                                        System.out.println(rowsUpdated + " row(s) updated.\n\n");
+                                    } catch (SQLException e) {
+                                        System.out.println("Error on update: " + e.getMessage() + "\n\n");
+                                    }
+                                }
+                                else if (choice == tableNames.size()) {
+                                    System.out.println("Exiting...\n\n");
+                                } else {
+                                    System.out.println("Invalid choice. Please try again.\n\n");
+                                }
+                            }
 
                             break;
 
                         case 4:
-                            System.out.println("Selected: Delete mode");
+                            System.out.println("\nSelected: Delete mode\n");
+                            choice = 0;
+
+                            while (choice != tableNames.size()) {
+                                tabResultSet.beforeFirst();
+                                listTables(tabResultSet);
+
+                                System.out.print("Enter your choice (1-" + (tableNames.size() + 1) + "): ");
+                                choice = scanner.nextInt();
+                                choice--;
+
+                                if (choice >= 0 && choice < tableNames.size()) {
+                                    String tableName = tableNames.get(choice);
+                                    System.out.println("Selected Table: " + tableName + "\n\n");
+
+                                    ResultSet printSet = statement.executeQuery("SELECT * FROM " + tableName);
+                                    ResultSetMetaData printMetaData = printSet.getMetaData();
+
+                                    printTable(printSet, printMetaData);
+                                    scanner.nextLine();
+
+                                    String exampleCondition = "";
+                                    if (printSet.next()) { // Move cursor to the first row
+                                        exampleCondition = printSet.getMetaData().getColumnName(1) + " = '" + printSet.getString(1) + "'";
+                                    }
+
+                                    System.out.print("Enter the WHERE condition to identify the record (ex. '" + exampleCondition + "'): ");
+                                    String condition = scanner.nextLine();
+
+                                    String deleteQuery = "DELETE FROM " + tableName + " WHERE " + condition;
+
+                                    try (PreparedStatement prepst = connection.prepareStatement(deleteQuery)) {
+                                        int rowsDeleted = prepst.executeUpdate();
+                                        System.out.println(rowsDeleted + " row(s) deleted.\n\n");
+                                    } catch (Exception e) {
+                                        System.out.println("Error on delete: " + e.getMessage() + "\n\n");
+                                    }
+                                    
+                                } 
+                            }
+                            
 
                             break;
 
                         case 5:
-                            System.out.println("quiting program");
+                            System.out.println("\n\nTerminating program..\n");
                             break;
                     }
 
                 }
 
             }
-
-
-
-
-
-        }catch (SQLException e){
+        } catch (SQLException e){
             e.printStackTrace();
         }
+    }
 
+    private static void listTables(ResultSet tabResultSet) throws SQLException {
+        int index = 1;
 
+        System.out.println("List of tables:");
+
+        while (tabResultSet.next()) {
+            System.out.println(index++ + ". " + tabResultSet.getString("TABLE_NAME"));
+        }
+        System.out.println(index + ". Exit");
+    }
+
+    private static void printTable(ResultSet printSet, ResultSetMetaData printMetaData) throws SQLException {
+        int columnCount = printMetaData.getColumnCount();
+        int[] columnWidths = new int[columnCount];
+
+        for (int i = 1; i <= columnCount; i++) {
+            columnWidths[i - 1] = printMetaData.getColumnName(i).length();
+        }
+
+        for (int width : columnWidths) {
+            System.out.print("+");
+            System.out.print("-".repeat(width + 2));
+        }
+        System.out.println("+");
+
+        printSet.beforeFirst();
+        while (printSet.next()) {
+            for (int i = 1; i <= columnCount; i++) {
+                String value = printSet.getString(i);
+                if (value != null) {
+                    columnWidths[i - 1] = Math.max(columnWidths[i - 1], value.length());
+                }
+            }
+        }
+        for (int i = 1; i <= columnCount; i++) {
+            System.out.printf("| %-"+ columnWidths[i - 1] +"s ", printMetaData.getColumnName(i));
+        }
+        System.out.println("|");
+
+        for (int width : columnWidths) {
+            System.out.print("+");
+            System.out.print("-".repeat(width + 2));
+        }
+        System.out.println("+");
+
+        printSet.beforeFirst();
+        while (printSet.next()) {
+            for (int i = 1; i <= columnCount; i++) {
+                String value = printSet.getString(i);
+                System.out.printf("| %-"+ columnWidths[i - 1] +"s ", value != null ? value : "NULL");
+            }
+            System.out.println("|");
+        }
+        for (int width : columnWidths) {
+            System.out.print("+");
+            System.out.print("-".repeat(width + 2));
+        }
+        System.out.println("+\n\n");
+    }
+
+    private static void insertRecord(Connection connection, DatabaseMetaData metaData, String tableName) {
+        Scanner scanner = new Scanner(System.in);
+        try {
+            String colName;
+            int i;
+
+            ResultSet columns = metaData.getColumns(null, null, tableName, null);
+            StringBuilder qb = new StringBuilder("INSERT INTO " + tableName + " (");
+            StringBuilder vb = new StringBuilder(" VALUES (");
+            ArrayList<String> columnNames = new ArrayList<>();
+
+            /*
+            * builds the insert query, will loop until the stringbuilders are
+            * approriately full
+            * 
+            * ex.
+            * qb is appended -> INSERT INTO (id, name, age, etc.)
+            * vb is appended -> VALUES (?, ?, ?, ...)
+            */
+            while (columns.next()) {
+                colName = columns.getString("COLUMN_NAME");
+
+                String isAutoIncrement = columns.getString("IS_AUTOINCREMENT");
+                String defaultValue = columns.getString("COLUMN_DEF");
+
+                // skips auto-increment or columns with default values
+                if (!("YES".equalsIgnoreCase(isAutoIncrement) || defaultValue != null)) {
+                    columnNames.add(colName);
+                    qb.append(colName).append(", ");
+                    vb.append("?, ");
+                }
+            }
+
+            if (columnNames.isEmpty()) {
+                System.out.println("No columns to insert for table " + tableName);
+                return;
+            }
+
+            qb.setLength(qb.length() - 2);
+            vb.setLength(vb.length() - 2);
+
+            // turns into INSERT INTO (colnames) VALUES ()
+            qb.append(")").append(vb).append(")");
+
+            PreparedStatement prepst = connection.prepareStatement(qb.toString());
+            
+            for (i = 0; i < columnNames.size(); i++) {
+                colName = columnNames.get(i);
+                String input;
+                System.out.print("Enter " + colName + ": ");
+                input = scanner.nextLine();
+                prepst.setString(i + 1, input);
+            }
+
+            int rowsInserted = prepst.executeUpdate();
+            if (rowsInserted > 0) 
+                System.out.println("Created a new record into " + tableName + "!");
+        } catch (Exception e) {
+            System.err.println("Error: " + e.getMessage());
+        }
 
     }
 }
