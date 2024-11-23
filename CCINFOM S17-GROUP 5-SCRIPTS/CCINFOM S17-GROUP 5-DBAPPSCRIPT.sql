@@ -119,11 +119,12 @@ CREATE TABLE Therapist_Revenue (
     RevenueID INT AUTO_INCREMENT PRIMARY KEY,
     TherapistID INT NOT NULL,
     ServiceID INT NOT NULL,
+    TransactionID INT NOT NULL,
     TherapistRevenue DECIMAL(8, 2),
     FOREIGN KEY (TherapistID) REFERENCES Therapists(TherapistID)
 		ON DELETE CASCADE 
 		ON UPDATE CASCADE,
-    FOREIGN KEY (ServiceID) REFERENCES Services(ServiceID)
+    FOREIGN KEY (ServiceID, TransactionID) REFERENCES Services(ServiceID, TransactionID)
 		ON DELETE CASCADE
         ON UPDATE CASCADE
 );
@@ -242,17 +243,17 @@ INSERT INTO Services (ServiceTypeID, ReceivingClientID, TransactionID, Appointme
 (9, 9, 9, 9, 9, '01:00:00'),
 (10, 10, 10, 10, 10, '01:30:00');
 
-INSERT INTO Therapist_Revenue (TherapistID, ServiceID, TherapistRevenue) VALUES
-(1, 1, 1200.00),
-(2, 2, 1500.00),
-(3, 3, 1800.00),
-(4, 4, 2000.00),
-(5, 5, 1700.00),
-(6, 6, 1600.00),
-(7, 7, 1900.00),
-(8, 8, 1400.00),
-(9, 9, 1300.00),
-(10, 10, 1100.00);
+INSERT INTO Therapist_Revenue (TherapistID, ServiceID, TransactionID, TherapistRevenue) VALUES
+(1, 1, 1, 1200.00),
+(2, 2, 2, 1500.00),
+(3, 3, 3, 1800.00),
+(4, 4, 4, 2000.00),
+(5, 5, 5, 1700.00),
+(6, 6, 6, 1600.00),
+(7, 7, 7, 1900.00),
+(8, 8, 8, 1400.00),
+(9, 9, 9, 1300.00),
+(10, 10, 10, 1100.00);
 
 
 INSERT INTO Client_Feedbacks (ClientID, AppointmentID, ClientRating, AdditionalFeedback) VALUES
@@ -266,4 +267,3 @@ INSERT INTO Client_Feedbacks (ClientID, AppointmentID, ClientRating, AdditionalF
 (8, 8, 5, 'Shiatsu session was incredible!'),
 (9, 9, 4, 'Prenatal massage was great, but short'),
 (10, 10, 5, 'Excellent Thai massage, very refreshing');
-
