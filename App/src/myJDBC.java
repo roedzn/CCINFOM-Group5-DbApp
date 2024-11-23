@@ -249,11 +249,7 @@ public class myJDBC {
                                     generateServicePopularityReport(connection);
                                     break;
                                 case 3:
-                                    System.out.println("Enter year: ");
-                                    int year = scanner.nextInt();
-                                    System.out.println("Enter month: ");
-                                    int month = scanner.nextInt();
-                                    generateServiceReport(connection, year, month);
+                                    generateServiceReport(connection);
                                     break;
                                 case 4:
                                     generateRevenueReport(connection);
@@ -418,35 +414,26 @@ public class myJDBC {
     private static void generateMonthlyAppointmentSummary(Connection connection) {
     System.out.println("\nGenerating Monthly Appointment Summary...");
     String query = """
-        SELECT
-            DATE_FORMAT(t.TransactionDate, '%Y-%m') AS Month,
-            COUNT(a.AppointmentID) AS TotalAppointments,
-            SUM(t.AmountPaid) AS TotalRevenue
-        FROM
-            Appointments a
-            INNER JOIN Services s ON s.AppointmentID = a.AppointmentID
-            INNER JOIN Transactions t ON s.TransactionID = t.TransactionID
-        GROUP BY
-            Month
-        ORDER BY
-            Month;
+        SELECT t.FirstName, t.LastName, COUNT(a.AppointmentID) AS AppointmentCount
+        FROM Therapists t
+        LEFT JOIN Appointments a ON t.TherapistID = a.TherapistID
+        WHERE MONTH(a.Status) = MONTH(CURRENT_DATE()) AND a.Status = 'Booked'
+        GROUP BY t.TherapistID
+        ORDER BY AppointmentCount DESC;
     """;
-
     try (Statement stmt = connection.createStatement();
          ResultSet rs = stmt.executeQuery(query)) {
-        System.out.printf("%-15s %-20s %-20s\n", "Month", "Total Appointments", "Total Revenue");
+        System.out.printf("%-20s %-20s %-15s\n", "Therapist First Name", "Therapist Last Name", "Appointments");
         while (rs.next()) {
-            System.out.printf("%-15s %-20d %-20.2f\n",
-                rs.getString("Month"),
-                rs.getInt("TotalAppointments"),
-                rs.getDouble("TotalRevenue"));
+            System.out.printf("%-20s %-20s %-15d\n",
+                rs.getString("FirstName"),
+                rs.getString("LastName"),
+                rs.getInt("AppointmentCount"));
         }
     } catch (SQLException e) {
         System.err.println("Error generating Monthly Appointment Summary: " + e.getMessage());
     }
 }
-
-
 
 private static void generateServicePopularityReport(Connection connection) {
     System.out.println("\nGenerating Service Popularity Report...");
@@ -471,31 +458,52 @@ private static void generateServicePopularityReport(Connection connection) {
     }
 }
 
-private static void generateServiceReport(Connection connection, int year, int month) {
+private static void generateServiceReport(Connection connection) {
     System.out.println("\nGenerating Service Report...");
-    String query = """
-        SELECT s.Type, COUNT(sv.ServiceID) AS TotalServices, AVG(TIME_TO_SEC(sv.Duration) / 60) AS AvgDuration
-        FROM Service_Types s
-        LEFT JOIN Services sv ON s.ServiceTypeID = sv.ServiceTypeID
-        WHERE YEAR(sv.TransactionDate) = ? AND MONTH(sv.TransactionDate) = ?
-        GROUP BY s.ServiceTypeID;
+
+    String totalPaymentsQuery = """
+        SELECT SUM(t.AmountPaid) AS Payments
+        FROM Services s
+        JOIN Transactions t ON t.TransactionID = s.TransactionID
+        JOIN Appointments ap ON s.AppointmentID = ap.AppointmentID;
     """;
-    try (PreparedStatement stmt = connection.prepareStatement(query)) {
-        stmt.setInt(1, year);
-        stmt.setInt(2, month);
-        try (ResultSet rs = stmt.executeQuery()) {
-            System.out.printf("%-30s %-15s %-15s\n", "Service Type", "Total Services", "Avg Duration (min)");
-            while (rs.next()) {
-                System.out.printf("%-30s %-15d %-15.2f\n",
-                    rs.getString("Type"),
-                    rs.getInt("TotalServices"),
-                    rs.getDouble("AvgDuration"));
-            }
+
+    String totalBookedPaymentsQuery = """
+        SELECT SUM(t.AmountPaid) AS totalBookedPayments
+        FROM Services s
+        JOIN Transactions t ON t.TransactionID = s.TransactionID
+        JOIN Appointments ap ON s.AppointmentID = ap.AppointmentID
+        WHERE ap.Status = 'Booked';
+    """;
+
+    String totalTherapistRevenueQuery = """
+        SELECT SUM(tr.TherapistRevenue) AS totalTherapistRevenue
+        FROM Therapist_Revenue tr;
+    """;
+
+    try (Statement stmt = connection.createStatement()) {
+        // Execute Total Payments Query
+        ResultSet rsTotalPayments = stmt.executeQuery(totalPaymentsQuery);
+        if (rsTotalPayments.next()) {
+            System.out.printf("Total Payments: %.2f\n", rsTotalPayments.getDouble("Payments"));
+        }
+
+        // Execute Total Booked Payments Query
+        ResultSet rsTotalBookedPayments = stmt.executeQuery(totalBookedPaymentsQuery);
+        if (rsTotalBookedPayments.next()) {
+            System.out.printf("Total Booked Payments: %.2f\n", rsTotalBookedPayments.getDouble("totalBookedPayments"));
+        }
+
+        // Execute Total Therapist Revenue Query
+        ResultSet rsTotalTherapistRevenue = stmt.executeQuery(totalTherapistRevenueQuery);
+        if (rsTotalTherapistRevenue.next()) {
+            System.out.printf("Total Therapist Revenue: %.2f\n", rsTotalTherapistRevenue.getDouble("totalTherapistRevenue"));
         }
     } catch (SQLException e) {
         System.err.println("Error generating Service Report: " + e.getMessage());
     }
 }
+
 
 private static void generateRevenueReport(Connection connection) {
     System.out.println("\nGenerating Revenue Report...");
