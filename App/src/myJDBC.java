@@ -22,7 +22,7 @@ public class myJDBC {
                 ResultSet.TYPE_SCROLL_INSENSITIVE, 
                 ResultSet.CONCUR_READ_ONLY
             );
-            try (Scanner scanner = new Scanner(System.in)) {
+            Scanner scanner = new Scanner(System.in);
                 int uberChoice = 0;
 
                 DatabaseMetaData metaData = connection.getMetaData();
@@ -253,8 +253,9 @@ public class myJDBC {
 
                 }
 
-            }
-        } catch (SQLException e){
+            
+        } catch(Exception e) {
+            System.out.println("An error occurred: " + e.getMessage());
         }
     }
 
@@ -321,7 +322,7 @@ public class myJDBC {
     }
 
     private static void insertRecord(Connection connection, DatabaseMetaData metaData, String tableName) {
-        try (Scanner scanner = new Scanner(System.in)) {
+        Scanner scanner = new Scanner(System.in);
             try {
                 String colName;
                 int i;
@@ -380,7 +381,6 @@ public class myJDBC {
             } catch (SQLException e) {
                 System.err.println("Error: " + e.getMessage());
             }
-        }
 
     }
     
@@ -390,7 +390,7 @@ public class myJDBC {
             ResultSet.CONCUR_READ_ONLY
         );
         String clientID, therapistID, timeslotID;
-        try (Scanner sc = new Scanner(System.in)) {
+        Scanner sc = new Scanner(System.in);
             ResultSet printSet = statement.executeQuery("""
                 SELECT Timeslots.TimeslotID, 
                        Timeslots.TherapistID, 
@@ -432,7 +432,6 @@ public class myJDBC {
 
             System.out.print("\nEnter preferred timeslot ID: ");
             timeslotID = sc.nextLine();
-        }
         String updateQuery = "UPDATE Timeslots SET Status = ? WHERE TherapistID = ? AND Status != ?";
 
         try (PreparedStatement updatestm = connection.prepareStatement(updateQuery)) {
@@ -479,7 +478,7 @@ public class myJDBC {
         insertRecord(connection, metaData, "Client_Feedbacks");
     }
     private static void updateTimeslot(Connection connection) {
-        try (Scanner scanner = new Scanner(System.in)) {
+        Scanner scanner = new Scanner(System.in);
             try {
                 System.out.println("\nUpdate Timeslot Information");
                 System.out.print("Enter TherapistID: ");
@@ -511,7 +510,6 @@ public class myJDBC {
             } catch (Exception e) {
                 System.out.println("Invalid input. Please try again.\n");
             }
-        }
     }
 
     
@@ -637,8 +635,5 @@ private static void generateRevenueReport(Connection connection) {
         System.err.println("Error generating Revenue Report: " + e.getMessage());
     }
 }
-
-
-
 
 }
