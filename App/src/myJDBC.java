@@ -35,7 +35,8 @@ public class myJDBC {
                     System.out.println("3. Update");
                     System.out.println("4. Delete");
                     System.out.println("5. Transactions");
-                    System.out.println("6. Exit\n");
+                    System.out.println("6. Reports");
+                    System.out.println("7. Exit\n");
                     System.out.println("Enter your choice (1-5): ");
                     uberChoice = scanner.nextInt();
                     
@@ -201,7 +202,7 @@ public class myJDBC {
 
                         case 5:
                             System.out.println("\nSelected: Transactions\n");
-                            System.out.println("\n\nChoose a transaction:");
+                            System.out.println("\nChoose a transaction:");
                             System.out.println("1. Book appointment");
                             System.out.println("2. Pay for service");
                             System.out.println("3. Record client feedback");
@@ -229,6 +230,43 @@ public class myJDBC {
 
                             break;
                         case 6:
+                            System.out.println("\nSelected: Reports\n");
+                            System.out.println("\nChoose a transaction:");
+                            System.out.println("1. Monthly Appointment Summary");
+                            System.out.println("2. Service Popularity Report");
+                            System.out.println("3. Service Repor");
+                            System.out.println("4. Revenue Report");
+                            System.out.println("5. Exit\n");
+                            System.out.println("Enter your choice (1-5): ");
+                            uberChoice = scanner.nextInt();
+                            
+                            
+                            switch (uberChoice) {
+                                case 1:
+                                    generateMonthlyAppointmentSummary(connection);
+                                    break;
+                                case 2:
+                                    generateServicePopularityReport(connection);
+                                    break;
+                                case 3:
+                                    System.out.println("Enter year: ");
+                                    int year = scanner.nextInt();
+                                    System.out.println("Enter month: ");
+                                    int month = scanner.nextInt();
+                                    generateServiceReport(connection, year, month);
+                                    break;
+                                case 4:
+                                    generateRevenueReport(connection);
+                                    break;
+                                case 5:
+                                    System.out.println("Exiting...");
+                                    break;
+                                default:
+                                    System.out.println("Invalid choice. Please try again.");
+                            }
+                            break;
+                        
+                        case 7:
                             System.out.println("\n\nTerminating program..\n");
                             break;
                     }
@@ -376,6 +414,114 @@ public class myJDBC {
         System.out.println("\nRecording client feedback...");
         insertRecord(connection, metaData, "Client_Feedbacks");
     }
+    
+    private static void generateMonthlyAppointmentSummary(Connection connection) {
+    System.out.println("\nGenerating Monthly Appointment Summary...");
+    String query = """
+        SELECT
+            DATE_FORMAT(t.TransactionDate, '%Y-%m') AS Month,
+            COUNT(a.AppointmentID) AS TotalAppointments,
+            SUM(t.AmountPaid) AS TotalRevenue
+        FROM
+            Appointments a
+            INNER JOIN Services s ON s.AppointmentID = a.AppointmentID
+            INNER JOIN Transactions t ON s.TransactionID = t.TransactionID
+        GROUP BY
+            Month
+        ORDER BY
+            Month;
+    """;
+
+    try (Statement stmt = connection.createStatement();
+         ResultSet rs = stmt.executeQuery(query)) {
+        System.out.printf("%-15s %-20s %-20s\n", "Month", "Total Appointments", "Total Revenue");
+        while (rs.next()) {
+            System.out.printf("%-15s %-20d %-20.2f\n",
+                rs.getString("Month"),
+                rs.getInt("TotalAppointments"),
+                rs.getDouble("TotalRevenue"));
+        }
+    } catch (SQLException e) {
+        System.err.println("Error generating Monthly Appointment Summary: " + e.getMessage());
+    }
+}
+
+
+
+private static void generateServicePopularityReport(Connection connection) {
+    System.out.println("\nGenerating Service Popularity Report...");
+    String query = """
+        SELECT s.Type, COUNT(sv.ServiceID) AS TotalBookings
+        FROM Service_Types s
+        LEFT JOIN Services sv ON s.ServiceTypeID = sv.ServiceTypeID
+        WHERE MONTH(CURRENT_DATE()) = MONTH(sv.Duration)
+        GROUP BY s.ServiceTypeID
+        ORDER BY TotalBookings DESC;
+    """;
+    try (Statement stmt = connection.createStatement();
+         ResultSet rs = stmt.executeQuery(query)) {
+        System.out.printf("%-30s %-15s\n", "Service Type", "Bookings");
+        while (rs.next()) {
+            System.out.printf("%-30s %-15d\n",
+                rs.getString("Type"),
+                rs.getInt("TotalBookings"));
+        }
+    } catch (SQLException e) {
+        System.err.println("Error generating Service Popularity Report: " + e.getMessage());
+    }
+}
+
+private static void generateServiceReport(Connection connection, int year, int month) {
+    System.out.println("\nGenerating Service Report...");
+    String query = """
+        SELECT s.Type, COUNT(sv.ServiceID) AS TotalServices, AVG(TIME_TO_SEC(sv.Duration) / 60) AS AvgDuration
+        FROM Service_Types s
+        LEFT JOIN Services sv ON s.ServiceTypeID = sv.ServiceTypeID
+        WHERE YEAR(sv.TransactionDate) = ? AND MONTH(sv.TransactionDate) = ?
+        GROUP BY s.ServiceTypeID;
+    """;
+    try (PreparedStatement stmt = connection.prepareStatement(query)) {
+        stmt.setInt(1, year);
+        stmt.setInt(2, month);
+        try (ResultSet rs = stmt.executeQuery()) {
+            System.out.printf("%-30s %-15s %-15s\n", "Service Type", "Total Services", "Avg Duration (min)");
+            while (rs.next()) {
+                System.out.printf("%-30s %-15d %-15.2f\n",
+                    rs.getString("Type"),
+                    rs.getInt("TotalServices"),
+                    rs.getDouble("AvgDuration"));
+            }
+        }
+    } catch (SQLException e) {
+        System.err.println("Error generating Service Report: " + e.getMessage());
+    }
+}
+
+private static void generateRevenueReport(Connection connection) {
+    System.out.println("\nGenerating Revenue Report...");
+    String query = """
+        SELECT s.Type, SUM(t.AmountPaid) AS TotalRevenue, MONTH(t.TransactionDate) AS Month
+        FROM Service_Types s
+        LEFT JOIN Services sv ON s.ServiceTypeID = sv.ServiceTypeID
+        LEFT JOIN Transactions t ON sv.TransactionID = t.TransactionID
+        WHERE YEAR(t.TransactionDate) = YEAR(CURRENT_DATE())
+        GROUP BY s.ServiceTypeID, MONTH(t.TransactionDate)
+        ORDER BY Month, TotalRevenue DESC;
+    """;
+    try (Statement stmt = connection.createStatement();
+         ResultSet rs = stmt.executeQuery(query)) {
+        System.out.printf("%-30s %-15s %-10s\n", "Service Type", "Total Revenue", "Month");
+        while (rs.next()) {
+            System.out.printf("%-30s %-15.2f %-10d\n",
+                rs.getString("Type"),
+                rs.getDouble("TotalRevenue"),
+                rs.getInt("Month"));
+        }
+    } catch (SQLException e) {
+        System.err.println("Error generating Revenue Report: " + e.getMessage());
+    }
+}
+
 
 
 
