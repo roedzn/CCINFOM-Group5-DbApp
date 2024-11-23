@@ -10,26 +10,26 @@
         🔗 [Lucidchart EERD](https://lucid.app/lucidchart/fd84e567-7d5e-4e4f-ac70-80523924ceb4/edit?viewport_loc=-326%2C-210%2C2096%2C1127%2C0_0&invitationId=inv_b714da36-9bd6-4d95-911b-d0ffe0834c44)
     - [x] Use UML design with crow foot
     - [x] Add relation table
-- [ ] Create SQL Queries
+- [x] Create SQL Queries
     - [x] Make tables in line with proposal, schema, and EERD
     - [x] Make sample queries for testing
     - [x] Ensure normalization for tables (recheck EERD and schema)
-    - [ ] Create queries for transactions and reports
+    - [x] Create queries for transactions and reports
       Transactions
         - [x] Query: Booking an appointment
         - [x] Query: Updating therapist availability
         - [x] Query: Paying for a service
-        - [ ] Query: Reporting client feedback
+        - [x] Query: Reporting client feedback
       Reports
         - [x] Query: Monthly Appointment Summary
-        - [ ] Query: Service Popularity Report
-        - [ ] Query: Service Report
+        - [x] Query: Service Popularity Report
+        - [x] Query: Service Report
         - [x] Query: Revenue Report
-    - [ ] Forward engineer the tables using mysql workbench
-- [ ] Create Java app
+    - [x] Forward engineer the tables using mysql workbench
+- [x] Create Java app
     - [x] Create simple interface first
     - [x] Connect Java to MYSQL local host
     - [x] Test queries with executeQuery();
-    - [ ] Ensure queries for transactions and reports can be done through Java
+    - [x] Ensure queries for transactions and reports can be done through Java
 - [ ] Enhance interface (once connected and queries work) [OPTIONAL]
     - [ ] Allow user option for transaction and report
