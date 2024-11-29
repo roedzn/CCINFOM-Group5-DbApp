@@ -229,7 +229,7 @@ public class myJDBC {
                         case 6 -> {
                             System.out.println("\nSelected: Reports\n");
                             System.out.println("\nChoose a transaction:");
-                            System.out.println("1. Monthly Appointment Summary");
+                            System.out.println("1. Appointment Summary");
                             System.out.println("2. Service Popularity Report");
                             System.out.println("3. Service Repor");
                             System.out.println("4. Revenue Report");
@@ -514,17 +514,20 @@ public class myJDBC {
 
     
     private static void generateMonthlyAppointmentSummary(Connection connection) {
-    System.out.println("\nGenerating Monthly Appointment Summary...");
+    System.out.println("\nGenerating Appointment Summary...");
     String query = """
-        SELECT t.FirstName, t.LastName, COUNT(a.AppointmentID) AS AppointmentCount
-        FROM Therapists t
-        LEFT JOIN Appointments a ON t.TherapistID = a.TherapistID
-        JOIN Timeslots ts ON a.TimeslotID = ts.TimeslotID
-        WHERE a.Status = 'Booked' 
-          AND MONTH(ts.StartTime) = MONTH(CURRENT_DATE()) 
-          AND YEAR(ts.StartTime) = YEAR(CURRENT_DATE())
-        GROUP BY t.TherapistID
-        ORDER BY AppointmentCount DESC;
+        SELECT 
+            t.FirstName, 
+            t.LastName, 
+            COUNT(a.AppointmentID) AS AppointmentCount
+        FROM 
+            Therapists t
+        LEFT JOIN 
+            Appointments a ON t.TherapistID = a.TherapistID
+        GROUP BY 
+            t.TherapistID, t.FirstName, t.LastName
+        ORDER BY 
+            AppointmentCount DESC;
     """;
     try (Statement stmt = connection.createStatement();
          ResultSet rs = stmt.executeQuery(query)) {
@@ -536,10 +539,9 @@ public class myJDBC {
                 rs.getInt("AppointmentCount"));
         }
     } catch (SQLException e) {
-        System.err.println("Error generating Monthly Appointment Summary: " + e.getMessage());
+        System.err.println("Error generating Appointment Summary: " + e.getMessage());
     }
 }
-
 
 private static void generateServicePopularityReport(Connection connection) {
     System.out.println("\nGenerating Service Popularity Report...");
